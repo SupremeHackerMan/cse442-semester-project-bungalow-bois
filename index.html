@@ -7,16 +7,18 @@
 <body>
 
 <h1>Connect 4</h1>
+<button id="start_button" type="button" class="start">start!</button>
+<img id="start" src="start_screen.jpg"></img>
 <div id="container"></div>
 
 
-<button id="button1" type="button" class="block">Col1</button>
-<button id="button2" type="button" class="block">Col2</button>
-<button id="button3" type="button" class="block">Col3</button>
-<button id="button4" type="button" class="block">Col4</button>
-<button id="button5" type="button" class="block">Col5</button>
-<button id="button6" type="button" class="block">Col6</button>
-<button id="button7" type="button" class="block">Col7</button>
+<button id="button1" type="button" class="block" style="visibility: hidden;">Col1</button>
+<button id="button2" type="button" class="block" style="visibility: hidden;">Col2</button>
+<button id="button3" type="button" class="block" style="visibility: hidden;">Col3</button>
+<button id="button4" type="button" class="block" style="visibility: hidden;">Col4</button>
+<button id="button5" type="button" class="block" style="visibility: hidden;">Col5</button>
+<button id="button6" type="button" class="block" style="visibility: hidden;">Col6</button>
+<button id="button7" type="button" class="block" style="visibility: hidden;">Col7</button>
 
 
 
@@ -41,9 +43,21 @@ for(x = 0; x < ROWS; x++){
 }
 
 
-create_board(board);
-print_board();
 
+document.getElementById('start_button').onclick = function() {
+   create_board(board);
+   print_board();
+   document.getElementById('start').src="";
+   document.getElementById('button1').style.visibility="visible";
+   document.getElementById('button2').style.visibility="visible";
+   document.getElementById('button3').style.visibility="visible";
+   document.getElementById('button4').style.visibility="visible";
+   document.getElementById('button5').style.visibility="visible";
+   document.getElementById('button6').style.visibility="visible";
+   document.getElementById('button7').style.visibility="visible";
+   document.getElementById('start_button').style.visibility="hidden";
+   
+}
 document.getElementById('button1').onclick = function() {
    place_piece(0);
 };
