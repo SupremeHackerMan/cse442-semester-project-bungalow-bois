@@ -7,7 +7,7 @@
 <body>
 
 <h1>Connect 4</h1>
-<button id="start_button" type="button" class="start">start!</button>
+<button id="start_button"  type="button" class="start">start!</button>
 <img id="start" src="start_screen.jpg"></img>
 <div id="container"></div>
 
@@ -56,7 +56,7 @@ document.getElementById('start_button').onclick = function() {
    document.getElementById('button6').style.visibility="visible";
    document.getElementById('button7').style.visibility="visible";
    document.getElementById('start_button').style.visibility="hidden";
-   
+
 }
 document.getElementById('button1').onclick = function() {
    place_piece(0);
@@ -100,7 +100,7 @@ function place_piece(column){
        p2_move_number++;
        p2_move_history[p2_move_number] = column + 1;
    }
-   
+
     // add check here to see if col is full
    for (var i = 0; i < ROWS; i++){
       if(board[i][column] == 1 || board[i][column] == 2){
@@ -148,10 +148,10 @@ function update_board() {
             s+= `<div class="player2"> ${""} </div>`;
          }
       }
-      
+
       s+= '</div>'
-   
-   
+
+
    document.getElementById("container").innerHTML = s
 }
 
@@ -159,7 +159,7 @@ function update_board() {
 }
 // prints board to website
 function print_board() {
-   
+
    console.log(p1_move_history);
    console.log(p2_move_history);
    update_board();
@@ -167,7 +167,7 @@ function print_board() {
 }
 
 // determines if that player just won the game player == what number piece they're using
-// the runtime on this is currently disgusting 
+// the runtime on this is currently disgusting
 // todo make this ambiguous that goes through all chains looking for chains of 4 -> won't have to double loop through board so many times
 function determine_win(player){
 
@@ -232,7 +232,7 @@ function determine_win(player){
    }
 
    for (var row = 0; row < ROWS - 3; row++){
-      for(var col = 0; col < COLS - 3; col++){
+      for(var col = COLS - 3; col > 0; col--){
          piece = board[row][col];
          var chain_size = 0;
          while(piece == player){
@@ -249,10 +249,10 @@ function determine_win(player){
       }
    }
 
-   
+
    return false;
 
-   
+
 }
 
 </script>
