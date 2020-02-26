@@ -27,6 +27,11 @@ var board = [];
 var turn = 1;
 var win = false;
 
+var p1_move_history = [];
+var p1_move_number = 0;
+
+var p2_move_history = [];
+var p2_move_number = 0;
 
 for(x = 0; x < ROWS; x++){
    board[x] = []
@@ -73,7 +78,14 @@ function create_board(board){
 // given a column finds first open spot then puts that players piece into the hole
 function place_piece(column){
 
-   
+   if(turn == 1){
+       p1_move_number++;
+       p1_move_history[p1_move_number] = column + 1;
+   }
+   else{
+       p2_move_number++;
+       p2_move_history[p2_move_number] = column + 1;
+   }
    
     // add check here to see if col is full
    for (var i = 0; i < ROWS; i++){
@@ -134,7 +146,8 @@ function update_board() {
 // prints board to website
 function print_board() {
    
-   
+   console.log(p1_move_history);
+   console.log(p2_move_history);
    update_board();
    return;
 }
