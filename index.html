@@ -6,10 +6,14 @@
 </head>
 <body>
 
+
+
 <h1>Connect 4</h1>
 <button id="start_button"  type="button" class="start">start!</button>
 <img id="start" src="start_screen.jpg"></img>
 <div id="container"></div>
+   
+
 
 
 <button id="button1" type="button" class="block" style="visibility: hidden;">Col1</button>
@@ -19,6 +23,7 @@
 <button id="button5" type="button" class="block" style="visibility: hidden;">Col5</button>
 <button id="button6" type="button" class="block" style="visibility: hidden;">Col6</button>
 <button id="button7" type="button" class="block" style="visibility: hidden;">Col7</button>
+
 
 
 
@@ -256,6 +261,79 @@ function determine_win(player){
 }
 
 </script>
+
+
+
+<p>
+
+   <heading style = "text-align: right;">Player List</heading>
+   <div id="player_list" style="width:450px;height:300px;line-height:3em;overflow:scroll;padding:5px;">
+      <div>Jackie | Wins: 0 | losses: 0 | <button>Challenge to a duel</button></div>
+      <div>Raymond | Wins: 0 | losses: 0 | <button>Challenge to a duel</button></div>
+      <div>Jesse | Wins: 0 | losses: 0 | <button>Challenge to a duel</button></div>
+   </div>
+</p>
+<!--
+<?php
+$servername = "tethys.cse.buffalo.edu:3306";
+$username = "jling2";
+$password = "50244515";
+$dbname = "cse442_542_2020_spring_teaml_db";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$sql = "SELECT playerName, playerId FROM Players";
+$result = $conn->query($sql);
+
+echo "<br> Name: ". $row["playerName"].  " - Id: "  . $row["playerId"].  "<br>";
+
+$conn->close();
+?>
+
+
+<?php
+ //create connection
+ $connect=mysqli_connect('tethys.cse.buffalo.edu:3306','jling2','50244515','cse442_542_2020_spring_teaml_db');
+
+//check connection
+ if(mysqli_connect_errno($connect))
+ {
+    echo 'Failed to connect to database: '.mysqli_connect_error();
+}
+else
+    echo 'Connected Successfully!!';
+?>
+
+-->
+
+
+
+<?php
+
+/*** mysql hostname ***/
+$hostname = 'tethys.cse.buffalo.edu:3306';
+
+/*** mysql username ***/
+$username = 'jling2';
+
+/*** mysql password ***/
+$password = '50244515';
+
+try {
+    $dbh = new PDO("mysql:host=$hostname;dbname=mysql", $username, $password);
+    /*** echo a message saying we have connected ***/
+    echo 'Connected to database';
+    }
+catch(PDOException $e)
+    {
+    echo $e->getMessage();
+    }
+?>
 
 </body>
 </html>
