@@ -1,14 +1,3 @@
-<?php
-// Initialize the session
-session_start();
- 
-// Check if the user is logged in, if not then redirect him to login page
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-    header("location: login.php");
-    exit;
-}
-?>
- 
 <!DOCTYPE html>
 <html>
 
@@ -21,7 +10,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 <button id="start_button"  type="button" class="start">start!</button>
 <img id="start" src="start_screen.jpg"></img>
 <div id="container"></div>
-
+<a href="login.php"><span>Login</span></a>
 
 <button id="button1" type="button" class="block" style="visibility: hidden;">Col1</button>
 <button id="button2" type="button" class="block" style="visibility: hidden;">Col2</button>
@@ -31,12 +20,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 <button id="button6" type="button" class="block" style="visibility: hidden;">Col6</button>
 <button id="button7" type="button" class="block" style="visibility: hidden;">Col7</button>
 
-<a href="logout.php" class="btn btn-danger">Sign Out of Your Account</a>
 
 
 <script>
-
-
 const COLS = 7;
 const ROWS = 6;
 var board = [];

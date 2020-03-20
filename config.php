@@ -1,16 +1,13 @@
 <?php
-/* Database credentials. Assuming you are running MySQL
-server with default setting (user 'root' with no password) */
-define('DB_SERVER', 'localhost');
-define('DB_USERNAME', 'root');
-define('DB_PASSWORD', '');
-define('DB_NAME', 'cse442_proj');
- 
-/* Attempt to connect to MySQL database */
-$link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
- 
-// Check connection
-if($link === false){
-    die("ERROR: Could not connect. " . mysqli_connect_error());
-}
+    $HOST = 'tethys.cse.buffalo.edu';
+    $USERNAME = 'jling2';
+    $USERPASSWORD = "50244515";
+    $DBNAME = "cse442_542_2020_spring_teaml_db";
+
+    $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
+    if(!$conn){
+        echo ("Fail to conncet server".mysqli_connect_error());
+    }else{
+        echo 'Please ignore this text, just means logging into the tethys database actually worked:)';
+    }
 ?>
