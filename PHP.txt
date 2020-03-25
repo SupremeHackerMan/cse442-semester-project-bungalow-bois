@@ -1,0 +1,26 @@
+You can store all your session data as key-value pairs in the $_SESSION[] superglobal array. 
+The stored data can be accessed during lifetime of a session
+
+Example
+<?php
+    // Starting session
+    session_start();
+    
+    // Storing session data
+    $_SESSION["firstname"] = "Peter";
+    $_SESSION["lastname"] = "Parker";
+?>
+
+
+To access the session data we set on our previous example from any other page on the same web domain — 
+simply recreate the session by calling session_start() and then pass the corresponding key to 
+the $_SESSION associative array.
+
+Example
+<?php
+    // Starting session
+    session_start();
+    
+    // Accessing session data
+    echo 'Hi, ' . $_SESSION["firstname"] . ' ' . $_SESSION["lastname"];
+?>
