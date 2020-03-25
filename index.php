@@ -2,274 +2,123 @@
 // Initialize the session
 session_start();
  
-// Check if the user is logged in, if not then redirect him to login page
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-    header("location: login.php");
+// Check if the user is already logged in, if yes then redirect him to welcome page
+if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
+    header("location: welcome.php");
     exit;
+}
+ 
+// Include config file
+require_once "config.php";
+ 
+// Define variables and initialize with empty values
+$username = $password = "";
+$username_err = $password_err = "";
+ 
+// Processing form data when form is submitted
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+ 
+    // Check if username is empty
+    if(empty(trim($_POST["username"]))){
+        $username_err = "Please enter username.";
+    } else{
+        $username = trim($_POST["username"]);
+    }
+    
+    // Check if password is empty
+    if(empty(trim($_POST["password"]))){
+        $password_err = "Please enter your password.";
+    } else{
+        $password = trim($_POST["password"]);
+    }
+    
+    // Validate credentials
+    if(empty($username_err) && empty($password_err)){
+        // Prepare a select statement
+        $sql = "SELECT id, username, password FROM users WHERE username = ?";
+        
+        if($stmt = mysqli_prepare($link, $sql)){
+            // Bind variables to the prepared statement as parameters
+            mysqli_stmt_bind_param($stmt, "s", $param_username);
+            
+            // Set parameters
+            $param_username = $username;
+            
+            // Attempt to execute the prepared statement
+            if(mysqli_stmt_execute($stmt)){
+                // Store result
+                mysqli_stmt_store_result($stmt);
+                
+                // Check if username exists, if yes then verify password
+                if(mysqli_stmt_num_rows($stmt) == 1){                    
+                    // Bind result variables
+                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
+                    if(mysqli_stmt_fetch($stmt)){
+                        if(password_verify($password, $hashed_password)){
+                            // Password is correct, so start a new session
+                            session_start();
+                            
+                            // Store data in session variables
+                            $_SESSION["loggedin"] = true;
+                            $_SESSION["id"] = $id;
+                            $_SESSION["username"] = $username;                            
+                            
+                            // Redirect user to welcome page
+                            header("location: welcome.php");
+                        } else{
+                            // Display an error message if password is not valid
+                            $password_err = "The password you entered was not valid.";
+                        }
+                    }
+                } else{
+                    // Display an error message if username doesn't exist
+                    $username_err = "No account found with that username.";
+                }
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+
+            // Close statement
+            mysqli_stmt_close($stmt);
+        }
+    }
+    
+    // Close connection
+    mysqli_close($link);
 }
 ?>
  
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+    <style type="text/css">
+        body{ font: 14px sans-serif; }
+        .wrapper{ width: 350px; padding: 20px; }
+    </style>
 </head>
 <body>
-
-<h1>Connect 4</h1>
-<button id="start_button"  type="button" class="start">start!</button>
-<img id="start" src="start_screen.jpg"></img>
-<div id="container"></div>
-
-
-<button id="button1" type="button" class="block" style="visibility: hidden;">Col1</button>
-<button id="button2" type="button" class="block" style="visibility: hidden;">Col2</button>
-<button id="button3" type="button" class="block" style="visibility: hidden;">Col3</button>
-<button id="button4" type="button" class="block" style="visibility: hidden;">Col4</button>
-<button id="button5" type="button" class="block" style="visibility: hidden;">Col5</button>
-<button id="button6" type="button" class="block" style="visibility: hidden;">Col6</button>
-<button id="button7" type="button" class="block" style="visibility: hidden;">Col7</button>
-
-<a href="logout.php" class="btn btn-danger">Sign Out of Your Account</a>
-
-
-<script>
-
-
-const COLS = 7;
-const ROWS = 6;
-var board = [];
-var turn = 1;
-var win = false;
-
-var p1_move_history = [];
-var p1_move_number = 0;
-
-var p2_move_history = [];
-var p2_move_number = 0;
-
-for(x = 0; x < ROWS; x++){
-   board[x] = []
-   for(y = 0; y < COLS; y++){
-      board[x][y] = 0;
-   }
-}
-
-
-
-document.getElementById('start_button').onclick = function() {
-   create_board(board);
-   print_board();
-   document.getElementById('start').src="";
-   document.getElementById('button1').style.visibility="visible";
-   document.getElementById('button2').style.visibility="visible";
-   document.getElementById('button3').style.visibility="visible";
-   document.getElementById('button4').style.visibility="visible";
-   document.getElementById('button5').style.visibility="visible";
-   document.getElementById('button6').style.visibility="visible";
-   document.getElementById('button7').style.visibility="visible";
-   document.getElementById('start_button').style.visibility="hidden";
-
-}
-document.getElementById('button1').onclick = function() {
-   place_piece(0);
-};
-document.getElementById('button2').onclick = function() {
-   place_piece(1);
-};
-document.getElementById('button3').onclick = function() {
-   place_piece(2);
-};
-document.getElementById('button4').onclick = function() {
-   place_piece(3);
-};
-document.getElementById('button5').onclick = function() {
-   place_piece(4);
-};
-document.getElementById('button6').onclick = function() {
-   place_piece(5);
-};
-document.getElementById('button7').onclick = function() {
-   place_piece(6);
-};
-// creates a fresh board
-function create_board(board){
-   for(x = 0; x < ROWS; x++){
-      board[x] = []
-      for(y = 0; y < COLS; y++){
-         board[x][y] = 0;
-   }
-}
-
-}
-// given a column finds first open spot then puts that players piece into the hole
-function place_piece(column){
-
-   if(turn == 1){
-       p1_move_number++;
-       p1_move_history[p1_move_number] = column + 1;
-   }
-   else{
-       p2_move_number++;
-       p2_move_history[p2_move_number] = column + 1;
-   }
-
-    // add check here to see if col is full
-   for (var i = 0; i < ROWS; i++){
-      if(board[i][column] == 1 || board[i][column] == 2){
-         if(turn == 1){
-            board[i - 1][column] = 1;
-            win = determine_win(turn);
-            turn = 2;
-         }
-         else{
-            board[i - 1][column] = 2;
-            win = determine_win(turn);
-            turn = 1;
-         }
-         print_board();
-         return;
-      }
-   }
-   // so if that fully runs then we know there are no pieces in the column
-   if(turn == 1){
-      board[ROWS - 1][column] = 1;
-      win = determine_win(turn);
-      turn = 2;
-   }
-   else{
-      board[ROWS - 1][column] = 2;
-      win = determine_win(turn);
-      turn = 1;
-   }
-
-   print_board();
-}
-function update_board() {
-   let s='';
-
-   for(let i=0; i<ROWS; i++) {
-      s+= '<div class="row">'
-      for(let j=0; j<COLS; j++) {
-         if(board[i][j] == 0){
-            s+= `<div class="cell"> ${""} </div>`;
-         }
-         else if(board[i][j] == 1){
-            s+= `<div class="player1"> ${""} </div>`;
-         }
-         else{
-            s+= `<div class="player2"> ${""} </div>`;
-         }
-      }
-
-      s+= '</div>'
-
-
-   document.getElementById("container").innerHTML = s
-}
-
-
-}
-// prints board to website
-function print_board() {
-
-   console.log(p1_move_history);
-   console.log(p2_move_history);
-   update_board();
-   return;
-}
-
-// determines if that player just won the game player == what number piece they're using
-// the runtime on this is currently disgusting
-// todo make this ambiguous that goes through all chains looking for chains of 4 -> won't have to double loop through board so many times
-function determine_win(player){
-
-   //so we first check in the horizontal direction if they won
-   //we need 4 in a row so we go from 0 -> max_rows then 0 -> max_cols - 3 bc max_cols - 3 is the last piece that can be the start of a 4 chain
-   for (var row = 0; row < ROWS; row++){
-      for(var col = 0; col < COLS - 3; col++){
-         piece = board[row][col];
-         var chain_size = 0;
-         // while the current piece is the right piece increase the chain_size check if we have 4 in a row then move on to next piece
-         while(piece == player){
-            chain_size++;
-
-            if(chain_size == 4){
-               alert("you win!");
-               create_board(board);
-               return true;
-            }
-
-            piece = board[row][col + chain_size];
-         }
-      }
-   }
-
-   //now we check vertical direction pretty much same as last part but now its rows - 3 instead of cols - 3
-   for (var row = 0; row < ROWS - 3; row++){
-      for(var col = 0; col < COLS; col++){
-         piece = board[row][col];
-         var chain_size = 0;
-         while(piece == player){
-            chain_size++;
-
-            if(chain_size == 4){
-               alert("you win!");
-               create_board(board);
-               return true;
-            }
-
-            piece = board[row + chain_size][col];
-         }
-      }
-   }
-
-   //now time for 2 vertical directions now both have -3
-
-   for (var row = 0; row < ROWS - 3; row++){
-      for(var col = 0; col < COLS - 3; col++){
-         piece = board[row][col];
-         var chain_size = 0;
-         while(piece == player){
-            chain_size++;
-
-            if(chain_size == 4){
-               alert("you win!");
-               create_board(board);
-               return true;
-            }
-
-            piece = board[row + chain_size][col + chain_size];
-         }
-      }
-   }
-
-   for (var row = 0; row < ROWS - 3; row++){
-      for(var col = COLS - 3; col > 0; col--){
-         piece = board[row][col];
-         var chain_size = 0;
-         while(piece == player){
-            chain_size++;
-
-            if(chain_size == 4){
-               alert("you win!");
-               create_board(board);
-               return true;
-            }
-
-            piece = board[row + chain_size][col - chain_size];
-         }
-      }
-   }
-
-
-   return false;
-
-
-}
-
-</script>
-
+    <div class="wrapper">
+        <h2>Login</h2>
+        <p>Please fill in your credentials to login.</p>
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" value="<?php echo $username; ?>">
+                <span class="help-block"><?php echo $username_err; ?></span>
+            </div>    
+            <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control">
+                <span class="help-block"><?php echo $password_err; ?></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Login">
+            </div>
+            <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
+        </form>
+    </div>    
 </body>
 </html>
