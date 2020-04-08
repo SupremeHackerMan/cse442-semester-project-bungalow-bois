@@ -357,10 +357,6 @@ function determine_win(player){
       <?php
          $currentUserName = $_SESSION["username"];
 
-         $HOST = 'tethys.cse.buffalo.edu';
-         $USERNAME = 'jling2';
-         $USERPASSWORD = "50244515";
-         $DBNAME = "cse442_542_2020_spring_teaml_db";
 
          $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
 
@@ -384,12 +380,6 @@ function determine_win(player){
 
    <div id="friends_list" class="box">Friends List
       <?php
-
-
-         $HOST = 'tethys.cse.buffalo.edu';
-         $USERNAME = 'jling2';
-         $USERPASSWORD = "50244515";
-         $DBNAME = "cse442_542_2020_spring_teaml_db";
 
          $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
 
@@ -419,12 +409,6 @@ function determine_win(player){
    <div id="leaderboard" class="box">Leaderboard
       <?php
 
-
-         $HOST = 'tethys.cse.buffalo.edu';
-         $USERNAME = 'jling2';
-         $USERPASSWORD = "50244515";
-         $DBNAME = "cse442_542_2020_spring_teaml_db";
-
          $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
 
 
@@ -449,11 +433,6 @@ function determine_win(player){
    <div id="match_history" class="box"> Match History
       <?php
          $currentUserName = $_SESSION["username"];
-
-         $HOST = 'tethys.cse.buffalo.edu';
-         $USERNAME = 'jling2';
-         $USERPASSWORD = "50244515";
-         $DBNAME = "cse442_542_2020_spring_teaml_db";
 
          $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
 
@@ -483,11 +462,6 @@ function determine_win(player){
       <?php
          $currentUserName = $_SESSION["username"];
 
-         $HOST = 'tethys.cse.buffalo.edu';
-         $USERNAME = 'jling2';
-         $USERPASSWORD = "50244515";
-         $DBNAME = "cse442_542_2020_spring_teaml_db";
-
          $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
 
          //search through FriendRequests table for current username
@@ -501,7 +475,7 @@ function determine_win(player){
             echo "<br>You have a friend request from " . $row["requester"].  "<br>";
          }       
             
-         
+         $username_err = "Please enter username.";
          $conn->close();
 
       ?>
@@ -513,6 +487,7 @@ function determine_win(player){
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Send">
       </form>
+      <span class="help-block"><?php echo $username_err; ?></span>
    <h2>Invite Friend to Game</h2>
       <form action = "friendsAndInvites\inviteFriend.php" method= "post">
          <b>Type their username:</b> <input type = "text" name = "user_name">
