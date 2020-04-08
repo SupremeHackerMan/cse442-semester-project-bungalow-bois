@@ -27,7 +27,7 @@
         $conn->query($sqlQuery2);                               
     }
     $conn->close();
-
+ 
     //return back to welcome.php 
-    header("location: cse-442l/welcome.php");
+    header("location: ../welcome.php");
 ?>
