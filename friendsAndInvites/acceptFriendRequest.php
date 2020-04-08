@@ -13,10 +13,12 @@
     $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
 
     //friend entry may be stored as [bob , jon] or [jon, bob]
+    //checks if the friendship is already in the database
     $sqlQuery = "SELECT * FROM `Friends` WHERE (`friend1Username` = '$currentUserName' AND  `friend2Username` = '$friendo' ) 
                                         OR (`friend2Username` = '$currentUserName' AND  `friend1Username` = '$friendo' ) ";
     $result = $conn->query($sqlQuery);
 
+    //checks if that user even exists
     $searchIfFriendReal = "SELECT * FROM `users` WHERE `username` = '$friendo' ";
     $searchResults = $conn->query($searchIfFriendReal);                                  
 

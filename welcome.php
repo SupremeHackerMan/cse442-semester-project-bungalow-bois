@@ -401,7 +401,7 @@ function determine_win(player){
             // output data of each row
             while($row = $result->fetch_assoc()) {
               
-               if ($row["friend1Username"] = '$currentUserName'){
+               if ($row["friend1Username"] === $currentUserName){
                   echo "<br> Name: ". $row["friend2Username"].  "<br>";
                }else{
                   echo "<br> Name: ". $row["friend1Username"].  "<br>";
@@ -479,26 +479,53 @@ function determine_win(player){
 
       ?>
    </div>
+   <div id="notifications" class="box"> Notifications
+      <?php
+         $currentUserName = $_SESSION["username"];
+
+         $HOST = 'tethys.cse.buffalo.edu';
+         $USERNAME = 'jling2';
+         $USERPASSWORD = "50244515";
+         $DBNAME = "cse442_542_2020_spring_teaml_db";
+
+         $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
+
+         //search through FriendRequests table for current username
+         $result = $conn->query("SELECT * FROM `FriendRequests` WHERE `requester` = '$currentUserName' ");
+         $result2 = $conn->query("SELECT * FROM `FriendRequests` WHERE `requestee` = '$currentUserName' ");
+       
+         while ($row = $result->fetch_assoc()) {
+            echo "<br>Your friend request to " . $row["requestee"].  " is pending <br>";
+         } 
+         while ($row = $result2->fetch_assoc()) {
+            echo "<br>You have a friend request from " . $row["requester"].  "<br>";
+         }       
+            
+         
+         $conn->close();
+
+      ?>
+   </div>
 
 
    <h2>Send Friend Request </h2>
       <form action = "friendsAndInvites\friendRequest.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "friend_user_name">
+         <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Send">
       </form>
    <h2>Invite Friend to Game</h2>
       <form action = "friendsAndInvites\inviteFriend.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "invite_user_name">
+         <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Invite">
       </form>
    <h2>Accept Friend Request </h2>
       <form action = "friendsAndInvites\acceptFriendRequest.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "accept_friend_user_name">
+         <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Accept">
       </form>
    <h2>Accept Invite</h2>
       <form action = "friendsAndInvites\acceptInviteFriend.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "accept_invite_user_name">
+         <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Accept">
       </form>
          

@@ -1,7 +1,8 @@
 <?php
     session_start();
 
-    $friendo = $_POST['friend_user_name'];
+    //varable should match in the corresponding form where       name =
+    $friendo = $_POST['user_name'];
     $currentUserName = $_SESSION["username"];
 
 
@@ -12,20 +13,19 @@
 
     $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
 
-    //friend entry may be stored as [bob , jon] or [jon, bob]
-    $sqlQuery = "SELECT * FROM `Friends` WHERE (`friend1Username` = '$currentUserName' AND  `friend2Username` = '$friendo' ) 
-                                        OR (`friend2Username` = '$currentUserName' AND  `friend1Username` = '$friendo' ) ";
-    $result = $conn->query($sqlQuery);
+    //checks if a request was already sent                                    
+    $result = $conn->query("SELECT * FROM `FriendRequests` WHERE (`requester` = '$currentUserName' AND  `requestee` = '$friendo' )");
 
-    $searchIfFriendReal = "SELECT * FROM `users` WHERE `username` = '$friendo' ";
-    $searchResults = $conn->query($searchIfFriendReal);                                  
-
+    //checks if that user even exists
+    $result2 = $conn->query("SELECT * FROM `users` WHERE `username` = '$friendo' ");
+    
     //if no entry found then insert
-    if ($result->num_rows == 0 && $searchResults->num_rows > 0) {
-        $sqlQuery2 = "INSERT INTO `Friends` (`friend1Username`,  `friend2Username`) 
+    if ($result->num_rows == 0 && $result2->num_rows != 0) {
+        $sqlQuery2 = "INSERT INTO `FriendRequests` (`requester`,  `requestee`) 
                                         VALUES ('$currentUserName', '$friendo') ";    
         $conn->query($sqlQuery2);                               
     }
+    
     $conn->close();
  
     //return back to welcome.php 
