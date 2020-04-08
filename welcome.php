@@ -14,7 +14,7 @@ if($_SESSION['loggedin']==true)
     }
 
 
-    $currentUserName = $_SESSION["username"];
+   $currentUserName = $_SESSION["username"];
    $HOST = 'tethys.cse.buffalo.edu';
    $USERNAME = 'jling2';
    $USERPASSWORD = "50244515";
@@ -60,7 +60,7 @@ if($_SESSION['loggedin']==true)
 <button id="button5" type="button" class="block" style="visibility: hidden;">Col5</button>
 <button id="button6" type="button" class="block" style="visibility: hidden;">Col6</button>
 <button id="button7" type="button" class="block" style="visibility: hidden;">Col7</button>
-
+<button id="undo" type="button" class="block" style="visibility: hidden;">Undo</button>
 
 
 
@@ -78,6 +78,8 @@ var p1_move_number = 0;
 
 var p2_move_history = [];
 var p2_move_number = 0;
+
+var move_column = [];
 
 for(x = 0; x < ROWS; x++){
    board[x] = []
@@ -99,6 +101,7 @@ document.getElementById('start_button').onclick = function() {
    document.getElementById('button6').style.visibility="visible";
    document.getElementById('button7').style.visibility="visible";
    document.getElementById('start_button').style.visibility="hidden";
+   document.getElementById('undo').style.visibility="visible";
 
 }
 
@@ -123,7 +126,9 @@ document.getElementById('button6').onclick = function() {
 document.getElementById('button7').onclick = function() {
    place_piece(6);
 };
-
+document.getElementById('undo').onclick = function() {
+   remove_piece(move_column[move_column.length - 1]);
+};
 
 // creates a fresh board
 function create_board(board){
@@ -141,10 +146,12 @@ function place_piece(column){
    if(turn == 1){
        p1_move_number++;
        p1_move_history[p1_move_number] = column + 1;
+       move_column.push(column);
    }
    else{
        p2_move_number++;
        p2_move_history[p2_move_number] = column + 1;
+       move_column.push(column);
    }
 
     // add check here to see if col is full
@@ -198,6 +205,18 @@ function place_piece(column){
       turn = 1;
    }
 }
+
+function remove_piece(column){
+   for (var i = 0; i < ROWS; i++){
+      if(board[i][column] != 0) {
+         board[i][column] = 0;
+         break;
+      }
+   }
+   move_column.pop();
+   update_board();
+}
+
 
 //increments the wins by
 function update_datatbase_wins_and_stuff(){
@@ -371,7 +390,7 @@ function determine_win(player){
                
             }
          } else {
-            echo "0 results";
+            echo "<br> 0 results";
          }
          $conn->close();
       
@@ -399,7 +418,7 @@ function determine_win(player){
            
             }
          } else {
-            echo "0 results";
+            echo "<br> 0 results";
          }
          $conn->close();
 
@@ -423,7 +442,6 @@ function determine_win(player){
                $counter++;
             } 
                
-            
          }
          $conn->close();
 
@@ -467,6 +485,9 @@ function determine_win(player){
          //search through FriendRequests table for current username
          $result = $conn->query("SELECT * FROM `FriendRequests` WHERE `requester` = '$currentUserName' ");
          $result2 = $conn->query("SELECT * FROM `FriendRequests` WHERE `requestee` = '$currentUserName' ");
+
+         /*initialized to be empty
+         $cantFindUserError = "";*/
        
          while ($row = $result->fetch_assoc()) {
             echo "<br>Your friend request to " . $row["requestee"].  " is pending <br>";
@@ -475,7 +496,6 @@ function determine_win(player){
             echo "<br>You have a friend request from " . $row["requester"].  "<br>";
          }       
             
-         $username_err = "Please enter username.";
          $conn->close();
 
       ?>
@@ -487,21 +507,30 @@ function determine_win(player){
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Send">
       </form>
-      <span class="help-block"><?php echo $username_err; ?></span>
+      <!--<span class="help-block"><?php //echo $username_err; ?></span>-->
    <h2>Invite Friend to Game</h2>
       <form action = "friendsAndInvites\inviteFriend.php" method= "post">
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Invite">
       </form>
-   <h2>Accept Friend Request </h2>
+      
+   <h2>Respond to Friend Request </h2>
       <form action = "friendsAndInvites\acceptFriendRequest.php" method= "post">
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Accept">
       </form>
-   <h2>Accept Invite</h2>
+      <form action = "friendsAndInvites\denyFriendRequest.php" method= "post">
+         <b>Type their username:</b> <input type = "text" name = "user_name">
+         <input type = "submit" value="Deny">
+      </form>
+   <h2>Respond to Invite</h2>
       <form action = "friendsAndInvites\acceptInviteFriend.php" method= "post">
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Accept">
+      </form>
+      <form action = "friendsAndInvites\denyInviteFriend.php" method= "post">
+         <b>Type their username:</b> <input type = "text" name = "user_name">
+         <input type = "submit" value="Deny">
       </form>
          
 </p>
