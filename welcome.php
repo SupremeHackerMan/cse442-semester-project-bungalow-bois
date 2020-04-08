@@ -12,6 +12,29 @@ if($_SESSION['loggedin']==true)
     { 
       echo "Logged in as ". $_SESSION["username"];
     }
+
+
+    $currentUserName = $_SESSION["username"];
+   $HOST = 'tethys.cse.buffalo.edu';
+   $USERNAME = 'jling2';
+   $USERPASSWORD = "50244515";
+   $DBNAME = "cse442_542_2020_spring_teaml_db";
+
+   $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
+
+
+   $sql = "SELECT wins, losses FROM users WHERE username = '$currentUserName' ";
+   $result = $conn->query($sql);
+
+   if ($result->num_rows > 0) {
+      // output data of each row
+      while (($row = $result->fetch_assoc())) {
+         echo "<br> Current Stats: - Wins: ". $row["wins"].  " - Losses: ". $row["losses"].  "<br>";
+      } 
+         
+      
+   }
+   $conn->close();
 ?>
  
 <!DOCTYPE html>
@@ -22,6 +45,7 @@ if($_SESSION['loggedin']==true)
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 
 <h1>Connect 4</h1>
 <button id="start_button"  type="button" class="start">start!</button>
@@ -62,8 +86,7 @@ for(x = 0; x < ROWS; x++){
    }
 }
 
-
-
+//displays da board
 document.getElementById('start_button').onclick = function() {
    create_board(board);
    print_board();
@@ -78,6 +101,7 @@ document.getElementById('start_button').onclick = function() {
    document.getElementById('start_button').style.visibility="hidden";
 
 }
+
 document.getElementById('button1').onclick = function() {
    place_piece(0);
 };
@@ -99,6 +123,8 @@ document.getElementById('button6').onclick = function() {
 document.getElementById('button7').onclick = function() {
    place_piece(6);
 };
+
+
 // creates a fresh board
 function create_board(board){
    for(x = 0; x < ROWS; x++){
@@ -151,7 +177,47 @@ function place_piece(column){
    }
 
    print_board();
+
+   if(win == true){
+      //yeah this code is ass
+      <?php
+      $currentUserName = $_SESSION["username"];
+      $HOST = 'tethys.cse.buffalo.edu';
+      $USERNAME = 'jling2';
+      $USERPASSWORD = "50244515";
+      $DBNAME = "cse442_542_2020_spring_teaml_db";
+
+      $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
+      $sql = "UPDATE users SET wins = wins + 1 WHERE  username = '$currentUserName' ";
+      $sql2 = "INSERT INTO MatchHistory (player1, player2, win) VALUES ('$currentUserName', 'Placeholder BOT', 1)";
+      $conn->query($sql);
+      $conn->query($sql2);
+      $conn->close();
+      ?>
+
+      turn = 1;
+   }
 }
+
+//increments the wins by
+function update_datatbase_wins_and_stuff(){
+   <?php
+      $currentUserName = $_SESSION["username"];
+      $HOST = 'tethys.cse.buffalo.edu';
+      $USERNAME = 'jling2';
+      $USERPASSWORD = "50244515";
+      $DBNAME = "cse442_542_2020_spring_teaml_db";
+
+      $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
+      $sql = "UPDATE users SET wins = wins + 1 WHERE  username = '$currentUserName' ";
+      $sql2 = "INSERT INTO MatchHistory (player1, player2, win) VALUES ('$currentUserName', 'Placeholder BOT', 1)";
+      $conn->query($sql);
+      $conn->query($sql2);
+      $conn->close();
+      ?>
+
+}
+
 function update_board() {
    let s='';
 
@@ -203,6 +269,7 @@ function determine_win(player){
 
             if(chain_size == 4){
                alert("you win!");
+               update_datatbase_wins_and_stuff();
                create_board(board);
                return true;
             }
@@ -222,6 +289,7 @@ function determine_win(player){
 
             if(chain_size == 4){
                alert("you win!");
+               update_datatbase_wins_and_stuff();
                create_board(board);
                return true;
             }
@@ -242,6 +310,7 @@ function determine_win(player){
 
             if(chain_size == 4){
                alert("you win!");
+               update_datatbase_wins_and_stuff();
                create_board(board);
                return true;
             }
@@ -260,6 +329,11 @@ function determine_win(player){
 
             if(chain_size == 4){
                alert("you win!");
+               update_datatbase_wins_and_stuff();
+               
+
+
+
                create_board(board);
                return true;
             }
@@ -274,21 +348,15 @@ function determine_win(player){
 
 
 }
-
 </script>
 
 
+<!--Every thing in this p tag: Displays a bunch of stuff like leaderboard and player list-->
 <p>
-
-   
    <div id="player_list" class="box">Player List
       <?php
          $currentUserName = $_SESSION["username"];
 
-         $HOST = 'tethys.cse.buffalo.edu';
-         $USERNAME = 'jling2';
-         $USERPASSWORD = "50244515";
-         $DBNAME = "cse442_542_2020_spring_teaml_db";
 
          $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
 
@@ -313,12 +381,6 @@ function determine_win(player){
    <div id="friends_list" class="box">Friends List
       <?php
 
-
-         $HOST = 'tethys.cse.buffalo.edu';
-         $USERNAME = 'jling2';
-         $USERPASSWORD = "50244515";
-         $DBNAME = "cse442_542_2020_spring_teaml_db";
-
          $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
 
 
@@ -329,7 +391,7 @@ function determine_win(player){
             // output data of each row
             while($row = $result->fetch_assoc()) {
               
-               if ($row["friend1Username"] = '$currentUserName'){
+               if ($row["friend1Username"] === $currentUserName){
                   echo "<br> Name: ". $row["friend2Username"].  "<br>";
                }else{
                   echo "<br> Name: ". $row["friend1Username"].  "<br>";
@@ -344,21 +406,108 @@ function determine_win(player){
       ?>
    </div>
 
-   <h2>Add a Friend </h2>
-      <form action = "friendRequest.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "friend_user_name">
-         <input type = "submit">
-      </form>
-   <h2>Challenge Another Player</h2>
-      <form action = "challengePlayer.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "placeholder">
-         <input type = "submit">
-      </form>
+   <div id="leaderboard" class="box">Leaderboard
+      <?php
 
+         $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
+
+
+         $sql = "SELECT username, wins, losses FROM users ORDER BY wins DESC";
+         $result = $conn->query($sql);
+
+         if ($result->num_rows > 0) {
+            // output data of each row
+            $counter = 0;
+            while (($row = $result->fetch_assoc()) AND ($counter < 10)) {
+               echo "<br>". $row["username"]. "<br> Wins: ". $row["wins"].  "   Losses: ". $row["losses"].  "<br>";
+               $counter++;
+            } 
+               
+            
+         }
+         $conn->close();
+
+      ?>
+   </div>
+
+   <div id="match_history" class="box"> Match History
+      <?php
+         $currentUserName = $_SESSION["username"];
+
+         $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
+
+
+         $sql = "SELECT * FROM `MatchHistory` WHERE `player1` = '$currentUserName' ";
+         $result = $conn->query($sql);
+         $outcome = "";
+
+         if ($result->num_rows > 0) {
+            // output data of each row
+            while ($row = $result->fetch_assoc()) {
+               if ($row["win"]  == 1) {
+                  $outcome = "won.";
+               } else {
+                  $outcome = "lost.";
+               }
+               echo "<br>" . $row["player1"]. " played against ". $row["player2"].  " and ". $outcome.  "<br>";
+            } 
+               
+            
+         }
+         $conn->close();
+
+      ?>
+   </div>
+   <div id="notifications" class="box"> Notifications
+      <?php
+         $currentUserName = $_SESSION["username"];
+
+         $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
+
+         //search through FriendRequests table for current username
+         $result = $conn->query("SELECT * FROM `FriendRequests` WHERE `requester` = '$currentUserName' ");
+         $result2 = $conn->query("SELECT * FROM `FriendRequests` WHERE `requestee` = '$currentUserName' ");
+       
+         while ($row = $result->fetch_assoc()) {
+            echo "<br>Your friend request to " . $row["requestee"].  " is pending <br>";
+         } 
+         while ($row = $result2->fetch_assoc()) {
+            echo "<br>You have a friend request from " . $row["requester"].  "<br>";
+         }       
+            
+         $username_err = "Please enter username.";
+         $conn->close();
+
+      ?>
+   </div>
+
+
+   <h2>Send Friend Request </h2>
+      <form action = "friendsAndInvites\friendRequest.php" method= "post">
+         <b>Type their username:</b> <input type = "text" name = "user_name">
+         <input type = "submit" value="Send">
+      </form>
+      <span class="help-block"><?php echo $username_err; ?></span>
+   <h2>Invite Friend to Game</h2>
+      <form action = "friendsAndInvites\inviteFriend.php" method= "post">
+         <b>Type their username:</b> <input type = "text" name = "user_name">
+         <input type = "submit" value="Invite">
+      </form>
+   <h2>Accept Friend Request </h2>
+      <form action = "friendsAndInvites\acceptFriendRequest.php" method= "post">
+         <b>Type their username:</b> <input type = "text" name = "user_name">
+         <input type = "submit" value="Accept">
+      </form>
+   <h2>Accept Invite</h2>
+      <form action = "friendsAndInvites\acceptInviteFriend.php" method= "post">
+         <b>Type their username:</b> <input type = "text" name = "user_name">
+         <input type = "submit" value="Accept">
+      </form>
+         
 </p>
 
 <!-- 
-   
+   UPDATE user SET wins = wins + 1 WHERE username = 'jackie'
             -->
 </body>
 </html>
