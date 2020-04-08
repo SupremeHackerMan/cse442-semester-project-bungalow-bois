@@ -14,7 +14,7 @@ if($_SESSION['loggedin']==true)
     }
 
 
-    $currentUserName = $_SESSION["username"];
+   $currentUserName = $_SESSION["username"];
    $HOST = 'tethys.cse.buffalo.edu';
    $USERNAME = 'jling2';
    $USERPASSWORD = "50244515";
@@ -371,7 +371,7 @@ function determine_win(player){
                
             }
          } else {
-            echo "0 results";
+            echo "<br> 0 results";
          }
          $conn->close();
       
@@ -399,7 +399,7 @@ function determine_win(player){
            
             }
          } else {
-            echo "0 results";
+            echo "<br> 0 results";
          }
          $conn->close();
 
@@ -423,7 +423,6 @@ function determine_win(player){
                $counter++;
             } 
                
-            
          }
          $conn->close();
 
@@ -467,6 +466,9 @@ function determine_win(player){
          //search through FriendRequests table for current username
          $result = $conn->query("SELECT * FROM `FriendRequests` WHERE `requester` = '$currentUserName' ");
          $result2 = $conn->query("SELECT * FROM `FriendRequests` WHERE `requestee` = '$currentUserName' ");
+
+         /*initialized to be empty
+         $cantFindUserError = "";*/
        
          while ($row = $result->fetch_assoc()) {
             echo "<br>Your friend request to " . $row["requestee"].  " is pending <br>";
@@ -475,7 +477,6 @@ function determine_win(player){
             echo "<br>You have a friend request from " . $row["requester"].  "<br>";
          }       
             
-         $username_err = "Please enter username.";
          $conn->close();
 
       ?>
@@ -487,21 +488,30 @@ function determine_win(player){
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Send">
       </form>
-      <span class="help-block"><?php echo $username_err; ?></span>
+      <!--<span class="help-block"><?php //echo $username_err; ?></span>-->
    <h2>Invite Friend to Game</h2>
       <form action = "friendsAndInvites\inviteFriend.php" method= "post">
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Invite">
       </form>
-   <h2>Accept Friend Request </h2>
+      
+   <h2>Respond to Friend Request </h2>
       <form action = "friendsAndInvites\acceptFriendRequest.php" method= "post">
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Accept">
       </form>
-   <h2>Accept Invite</h2>
+      <form action = "friendsAndInvites\denyFriendRequest.php" method= "post">
+         <b>Type their username:</b> <input type = "text" name = "user_name">
+         <input type = "submit" value="Deny">
+      </form>
+   <h2>Respond to Invite</h2>
       <form action = "friendsAndInvites\acceptInviteFriend.php" method= "post">
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Accept">
+      </form>
+      <form action = "friendsAndInvites\denyInviteFriend.php" method= "post">
+         <b>Type their username:</b> <input type = "text" name = "user_name">
+         <input type = "submit" value="Deny">
       </form>
          
 </p>

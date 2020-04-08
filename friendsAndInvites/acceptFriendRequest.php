@@ -1,7 +1,7 @@
 <?php
     session_start();
 
-    $friendo = $_POST['friend_user_name'];
+    $friendo = $_POST['user_name'];
     $currentUserName = $_SESSION["username"];
 
 
@@ -13,21 +13,22 @@
     $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
 
     //friend entry may be stored as [bob , jon] or [jon, bob]
-    //checks if the friendship is already in the database
-    $sqlQuery = "SELECT * FROM `Friends` WHERE (`friend1Username` = '$currentUserName' AND  `friend2Username` = '$friendo' ) 
-                                        OR (`friend2Username` = '$currentUserName' AND  `friend1Username` = '$friendo' ) ";
-    $result = $conn->query($sqlQuery);
+    //checks if the friend request is in the database
+    $result = $conn->query("SELECT * FROM `FriendRequests` WHERE (`requester` = '$friendo' AND  `requestee` = '$currentUserName' )");
 
     //checks if that user even exists
-    $searchIfFriendReal = "SELECT * FROM `users` WHERE `username` = '$friendo' ";
-    $searchResults = $conn->query($searchIfFriendReal);                                  
+    $searchResults = $conn->query("SELECT * FROM `users` WHERE `username` = '$friendo' ");                                  
 
     //if no entry found then insert
-    if ($result->num_rows == 0 && $searchResults->num_rows > 0) {
+    if ($result->num_rows != 0 && $searchResults->num_rows != 0) {
         $sqlQuery2 = "INSERT INTO `Friends` (`friend1Username`,  `friend2Username`) 
-                                        VALUES ('$currentUserName', '$friendo') ";    
-        $conn->query($sqlQuery2);                               
+                                        VALUES ('$currentUserName', '$friendo') ";  
+        $conn->query($sqlQuery2); 
+        $conn->query("DELETE FROM `FriendRequests` WHERE (`requester` = '$friendo' AND  `requestee` = '$currentUserName' )");                              
     }
+
+    
+   
     $conn->close();
     //return back to welcome.php 
     header("location: ../welcome.php");
