@@ -1,19 +1,15 @@
 <?php
-// Initialize the session
-session_start();
- 
-// Check if the user is logged in, if not then redirect him to login page
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-    header("location: login.php");
-    exit;
-}
-
-if($_SESSION['loggedin']==true)
-    { 
-      echo "Logged in as ". $_SESSION["username"];
-    }
-
-
+   // Initialize the session
+   session_start();
+   // Check if the user is logged in, if not then redirect him to login page
+   if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+      header("location: login.php");
+      exit;
+   }
+   //displays your username at the top of page
+   if($_SESSION['loggedin']==true){ 
+         echo "Logged in as ". $_SESSION["username"];
+   }
    $currentUserName = $_SESSION["username"];
    $HOST = 'tethys.cse.buffalo.edu';
    $USERNAME = 'jling2';
@@ -22,31 +18,31 @@ if($_SESSION['loggedin']==true)
 
    $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
 
-
    $sql = "SELECT wins, losses FROM users WHERE username = '$currentUserName' ";
    $result = $conn->query($sql);
 
+   //displays your game stats i.e. wins and losses
    if ($result->num_rows > 0) {
       // output data of each row
       while (($row = $result->fetch_assoc())) {
-         echo "<br> Current Stats: - Wins: ". $row["wins"].  " - Losses: ". $row["losses"].  "<br>";
+         echo "<br> Current Stats: Wins: ". $row["wins"].  " Losses: ". $row["losses"].  "<br>";
       } 
-         
-      
    }
-   $conn->close();
+   
 ?>
  
 <!DOCTYPE html>
 <html>
-<a href="logout.php" class="btn btn-danger">Log Out</a>
+
+<a href="logout.php" class="btn btn-danger">Log Out</a><!--logout button-->
 
 <head>
-  <link rel="stylesheet" href="style.css">
+  
 </head>
 <body>
 
 
+<<<<<<< Updated upstream
 <h1>Connect 4</h1>
 <button id="start_button"  type="button" class="start">start!</button>
 <img id="start" src="start_screen.jpg"></img>
@@ -64,15 +60,87 @@ if($_SESSION['loggedin']==true)
 
 
 
-<script>
+=======
+<H1>Neck 4 - Local Multiplayer Mode</H1>
 
+<!--links to css file-->
+<link rel="stylesheet" href="style.css">
+
+<div id="colorTurn">Yellow Turn (Thats You)</div>
+<div id="board">
+<div class="row">
+  <div class="cell" id="cell00" onclick="selectColumn(0)"></div>
+  <div class="cell" id="cell01" onclick="selectColumn(1)"></div>
+  <div class="cell" id="cell02" onclick="selectColumn(2)"></div>
+  <div class="cell" id="cell03" onclick="selectColumn(3)"></div>
+  <div class="cell" id="cell04" onclick="selectColumn(4)"></div>
+  <div class="cell" id="cell05" onclick="selectColumn(5)"></div>
+  <div class="cell" id="cell06" onclick="selectColumn(6)"></div>
+</div>
+<div class="row">  
+  <div class="cell" id="cell10" onclick="selectColumn(0)"></div>
+  <div class="cell" id="cell11" onclick="selectColumn(1)"></div>
+  <div class="cell" id="cell12" onclick="selectColumn(2)"></div>
+  <div class="cell" id="cell13" onclick="selectColumn(3)"></div>
+  <div class="cell" id="cell14" onclick="selectColumn(4)"></div>
+  <div class="cell" id="cell15" onclick="selectColumn(5)"></div>
+  <div class="cell" id="cell16" onclick="selectColumn(6)"></div>
+</div>
+<div class="row">  
+  <div class="cell" id="cell20" onclick="selectColumn(0)"></div>
+  <div class="cell" id="cell21" onclick="selectColumn(1)"></div>
+  <div class="cell" id="cell22" onclick="selectColumn(2)"></div>
+  <div class="cell" id="cell23" onclick="selectColumn(3)"></div>
+  <div class="cell" id="cell24" onclick="selectColumn(4)"></div>
+  <div class="cell" id="cell25" onclick="selectColumn(5)"></div>
+  <div class="cell" id="cell26" onclick="selectColumn(6)"></div>
+</div>
+<div class="row">  
+  <div class="cell" id="cell30" onclick="selectColumn(0)"></div>
+  <div class="cell" id="cell31" onclick="selectColumn(1)"></div>
+  <div class="cell" id="cell32" onclick="selectColumn(2)"></div>
+  <div class="cell" id="cell33" onclick="selectColumn(3)"></div>
+  <div class="cell" id="cell34" onclick="selectColumn(4)"></div>
+  <div class="cell" id="cell35" onclick="selectColumn(5)"></div>
+  <div class="cell" id="cell36" onclick="selectColumn(6)"></div>
+</div>
+<div class="row">
+  <div class="cell" id="cell40" onclick="selectColumn(0)"></div>
+  <div class="cell" id="cell41" onclick="selectColumn(1)"></div>
+  <div class="cell" id="cell42" onclick="selectColumn(2)"></div>
+  <div class="cell" id="cell43" onclick="selectColumn(3)"></div>
+  <div class="cell" id="cell44" onclick="selectColumn(4)"></div>
+  <div class="cell" id="cell45" onclick="selectColumn(5)"></div>
+  <div class="cell" id="cell46" onclick="selectColumn(6)"></div>
+</div>
+<div class="row">
+  <div class="cell" id="cell50" onclick="selectColumn(0)"></div>
+  <div class="cell" id="cell51" onclick="selectColumn(1)"></div>
+  <div class="cell" id="cell52" onclick="selectColumn(2)"></div>
+  <div class="cell" id="cell53" onclick="selectColumn(3)"></div>
+  <div class="cell" id="cell54" onclick="selectColumn(4)"></div>
+  <div class="cell" id="cell55" onclick="selectColumn(5)"></div>
+  <div class="cell" id="cell56" onclick="selectColumn(6)"></div>
+</div>
+</div>
+<input id="resetButton" type="button" value="Undo" onclick="undoMove()" /></br></br><!--button to undo a move-->
+<input id="resetButton" type="button" value="Clear/Start New Game" onclick="clearBoard()" /></br></br><!--resets the board button-->
+
+
+
+<!--*************************************JAVASCRIPT***********Start**********************************************-->
+>>>>>>> Stashed changes
+<script>
 
 const COLS = 7;
 const ROWS = 6;
+const chainSize = 4// default is 4 consecutive pieces to win
+
 var board = [];
-var turn = 1;
+var turn = 1; //1 for Yellow, 2 for Red
 var win = false;
 
+<<<<<<< Updated upstream
 var p1_move_history = [];
 var p1_move_number = 0;
 
@@ -132,10 +200,29 @@ document.getElementById('undo').onclick = function() {
 
 // creates a fresh board
 function create_board(board){
+=======
+//saves all moves into a "stack"    -   this is for the undo button
+//ex. if p1 makes a move at positions board[1][2] then [1,2] will be pushed to the stack
+var moveHistory = [];
+
+/*
+INITIALIZE A NEW BOARD
+should look like this
+var board = [
+   [0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0]
+ ];*/ 
+function newBoard(board){
+>>>>>>> Stashed changes
    for(x = 0; x < ROWS; x++){
       board[x] = []
       for(y = 0; y < COLS; y++){
          board[x][y] = 0;
+<<<<<<< Updated upstream
    }
 }
 
@@ -169,43 +256,14 @@ function place_piece(column){
          }
          print_board();
          return;
+=======
+>>>>>>> Stashed changes
       }
    }
-   // so if that fully runs then we know there are no pieces in the column
-   if(turn == 1){
-      board[ROWS - 1][column] = 1;
-      win = determine_win(turn);
-      turn = 2;
-   }
-   else{
-      board[ROWS - 1][column] = 2;
-      win = determine_win(turn);
-      turn = 1;
-   }
-
-   print_board();
-
-   if(win == true){
-      //yeah this code is ass
-      <?php
-      $currentUserName = $_SESSION["username"];
-      $HOST = 'tethys.cse.buffalo.edu';
-      $USERNAME = 'jling2';
-      $USERPASSWORD = "50244515";
-      $DBNAME = "cse442_542_2020_spring_teaml_db";
-
-      $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-      $sql = "UPDATE users SET wins = wins + 1 WHERE  username = '$currentUserName' ";
-      $sql2 = "INSERT INTO MatchHistory (player1, player2, win) VALUES ('$currentUserName', 'Placeholder BOT', 1)";
-      $conn->query($sql);
-      $conn->query($sql2);
-      $conn->close();
-      ?>
-
-      turn = 1;
-   }
 }
+newBoard(board);
 
+<<<<<<< Updated upstream
 function remove_piece(column){
    for (var i = 0; i < ROWS; i++){
       if(board[i][column] != 0) {
@@ -234,206 +292,298 @@ function update_datatbase_wins_and_stuff(){
       $conn->query($sql2);
       $conn->close();
       ?>
+=======
+//read the board from the table on tethys. Its stored there as 6 strings each one corresponds to a row
+function readFromDatabase(){
+>>>>>>> Stashed changes
 
 }
 
-function update_board() {
-   let s='';
+//writes the board onto the database
+function writetoDatabase(){
+   //convert each row into strings
+   var row0 = board[0].join('');
+   var row1 = board[1].join('');
+   var row2 = board[2].join('');
+   var row3 = board[3].join('');
+   var row4 = board[4].join('');
+   var row5 = board[5].join('');
 
-   for(let i=0; i<ROWS; i++) {
-      s+= '<div class="row">'
-      for(let j=0; j<COLS; j++) {
-         if(board[i][j] == 0){
-            s+= `<div class="cell"> ${""} </div>`;
-         }
-         else if(board[i][j] == 1){
-            s+= `<div class="player1"> ${""} </div>`;
-         }
-         else{
-            s+= `<div class="player2"> ${""} </div>`;
-         }
+   //puts the strings into cookies so the variables can be accessed using php
+   document.cookie = "row0="+row0;
+   document.cookie = "row1="+row1;
+   document.cookie = "row2="+row2;
+   document.cookie = "row3="+row3;
+   document.cookie = "row4="+row4;
+   document.cookie = "row5="+row5;
+
+   <?php
+      //retrieves the data from the cookies
+      $row0 = $_COOKIE["row0"];
+      $row1 = $_COOKIE["row1"];
+      $row2 = $_COOKIE["row2"];
+      $row3 = $_COOKIE["row3"];
+      $row4 = $_COOKIE["row4"];
+      $row5 = $_COOKIE["row5"];
+
+      $result = $conn->query("SELECT * FROM `SavedOfflineGames` WHERE `username` = '$currentUserName' ");//checks if players saved game is there or not
+
+      if ($result->num_rows == 0) {//if not there create a new entry
+         $sql = "INSERT INTO `SavedOfflineGames` (username, row0, row1, row2, row3, row4, row5) 
+                                    VALUES ('$currentUserName', '$row0', '$row1','$row2','$row3','$row4','$row5')";
+         $conn->query($sql);   
+      }else{//if its there it will update the existing one
+         $sql = "UPDATE `SavedOfflineGames` SET row0 = '$row0', row1 = '$row1', row2 = '$row2', row3 = '$row3', row4 = '$row4', row5 = '$row5' 
+                                          WHERE username = '$currentUserName'" ;                          
+         $conn->query($sql);   
       }
-
-      s+= '</div>'
-
-
-   document.getElementById("container").innerHTML = s
-}
-
+   ?>
+   
 
 }
-// prints board to website
-function print_board() {
 
-   console.log(p1_move_history);
-   console.log(p2_move_history);
-   update_board();
-   return;
-}
-
-// determines if that player just won the game player == what number piece they're using
-// the runtime on this is currently disgusting
-// todo make this ambiguous that goes through all chains looking for chains of 4 -> won't have to double loop through board so many times
-function determine_win(player){
-
-   //so we first check in the horizontal direction if they won
-   //we need 4 in a row so we go from 0 -> max_rows then 0 -> max_cols - 3 bc max_cols - 3 is the last piece that can be the start of a 4 chain
-   for (var row = 0; row < ROWS; row++){
-      for(var col = 0; col < COLS - 3; col++){
-         piece = board[row][col];
-         var chain_size = 0;
-         // while the current piece is the right piece increase the chain_size check if we have 4 in a row then move on to next piece
-         while(piece == player){
-            chain_size++;
-
-            if(chain_size == 4){
-               alert("you win!");
-               update_datatbase_wins_and_stuff();
-               create_board(board);
-               return true;
+//this add a game piece to a column and does some other stuff
+function selectColumn(col) {
+   if(!win){
+      if (turn==1) {
+         var row = board.length - 1;
+         //columns 5 to 0 (default)
+         while (row > -1) { 
+            if(board[row][col] != 0 ){//if the slot is taken then go up a row
+               row--;
+            }else{//otherwise the pieces is placed here
+               board[row][col]=1;
+               pushToMoveHistory(row,col);//move is pushed into the move history stack
+               break;
             }
-
-            piece = board[row][col + chain_size];
          }
+         turn=2;//go to next players turn (red)
+         document.getElementById("colorTurn").innerHTML="Red Turn";//changes the on top of board to display red players turn
+         
+      } else {
+         var row = board.length - 1;
+         while (row > -1) { 
+            if(board[row][col] !=0 ){
+               row--;
+            }else{
+               board[row][col]=2;
+               pushToMoveHistory(row,col);
+               break;
+            }
+         }
+         turn=1;
+         document.getElementById("colorTurn").innerHTML="Yellow Turn";//changes the on top of board to display yellow players turn 
+      }
+      updateBoard();//updates the display for the board
+      writetoDatabase();//updates the board to the database
+      
+      //checks if player1/yellow won
+      if(determineWin(board) == 1){
+         document.getElementById("colorTurn").innerHTML="Yellow/You Win!";
+         win = true;
+         <?php
+            $sql = "UPDATE users SET wins = wins + 1 WHERE  username = '$currentUserName' ";//updates your win (increments it by 1)
+            $sql2 = "INSERT INTO MatchHistory (player1, player2, win) VALUES ('$currentUserName', 'computer', 1)";//updates your match history 
+            $conn->query($sql);
+            $conn->query($sql2);
+         ?>
+      //checks if player2/red won   
+      }if(determineWin(board) == 2){
+         document.getElementById("colorTurn").innerHTML="Red Wins!";
+         win = true;
+         <?php
+            $sql2 = "INSERT INTO MatchHistory (player1, player2, win) VALUES ('$currentUserName', 'computer', 1)";//you lost lol
+            $conn->query($sql2);
+         ?>
       }
    }
-
-   //now we check vertical direction pretty much same as last part but now its rows - 3 instead of cols - 3
-   for (var row = 0; row < ROWS - 3; row++){
-      for(var col = 0; col < COLS; col++){
-         piece = board[row][col];
-         var chain_size = 0;
-         while(piece == player){
-            chain_size++;
-
-            if(chain_size == 4){
-               alert("you win!");
-               update_datatbase_wins_and_stuff();
-               create_board(board);
-               return true;
-            }
-
-            piece = board[row + chain_size][col];
-         }
-      }
-   }
-
-   //now time for 2 vertical directions now both have -3
-
-   for (var row = 0; row < ROWS - 3; row++){
-      for(var col = 0; col < COLS - 3; col++){
-         piece = board[row][col];
-         var chain_size = 0;
-         while(piece == player){
-            chain_size++;
-
-            if(chain_size == 4){
-               alert("you win!");
-               update_datatbase_wins_and_stuff();
-               create_board(board);
-               return true;
-            }
-
-            piece = board[row + chain_size][col + chain_size];
-         }
-      }
-   }
-
-   for (var row = 0; row < ROWS - 3; row++){
-      for(var col = COLS - 3; col > 0; col--){
-         piece = board[row][col];
-         var chain_size = 0;
-         while(piece == player){
-            chain_size++;
-
-            if(chain_size == 4){
-               alert("you win!");
-               update_datatbase_wins_and_stuff();
-               
-
-
-
-               create_board(board);
-               return true;
-            }
-
-            piece = board[row + chain_size][col - chain_size];
-         }
-      }
-   }
-
-
-   return false;
-
-
+   
 }
+
+//refreshes the connect 4 board after each turn
+function updateBoard() {
+  for (var row = 0; row < 6; row++) {
+    for (var col = 0; col < 7; col++) {
+      if (board[row][col]==0) { 
+                document.getElementById("cell"+row+col).style.backgroundColor="#FFFFFF";
+      } else if (board[row][col]==1) { //1 for yellow
+                document.getElementById("cell"+row+col).style.backgroundColor="#FFFF00";
+      } else if (board[row][col]==2) { //1 for yellow
+                document.getElementById("cell"+row+col).style.backgroundColor="#FF0000";
+       }
+    }
+  }  
+}
+
+//HELPERS to check win conditions
+function checkRows(matrix){//check horizontal ex. [0 0 0 1 1 1 1]
+   for (var row = 0; row < matrix.length; row++){
+       for (var col = 0; col < matrix[row].length - 3; col++){
+           var element = matrix[row][col];
+           if (element == matrix[row][col + 1] && 
+               element == matrix[row][col + 2] && 
+               element == matrix[row][col + 3] &&
+               element == 1){
+               return 1;
+           }if (element == matrix[row][col + 1] && 
+               element == matrix[row][col + 2] && 
+               element == matrix[row][col + 3] &&
+               element == 2){
+               return 2;
+           }
+       }
+   }
+   return 0;
+}
+function checkColumns(matrix){//check vertical
+   for (var row = 0; row < matrix.length - 3; row++){
+       for (var col = 0; col < matrix[row].length; col++){
+           var element = matrix[row][col];
+           if (element == matrix[row + 1][col] && 
+               element == matrix[row + 2][col] && 
+               element == matrix[row + 3][col] &&
+               element == 1){
+               return 1;
+           }if (element == matrix[row + 1][col] && 
+               element == matrix[row + 2][col] && 
+               element == matrix[row + 3][col] &&
+               element == 2){
+               return 2;
+           }
+       }
+   }
+   return 0;
+}
+function checkMainDiagonal(matrix){//checks for a positive slope diagonal
+   for (var row = 0; row < matrix.length - 3; row++){
+       for (var col = 0; col < matrix[row].length - 3; col++){
+           var element = matrix[row][col];
+           if (element == matrix[row + 1][col + 1] && 
+               element == matrix[row + 2][col + 2] && 
+               element == matrix[row + 3][col + 3] &&
+               element == 1){
+               return 1;
+           }if (element == matrix[row + 1][col + 1] && 
+               element == matrix[row + 2][col + 2] && 
+               element == matrix[row + 3][col + 3] &&
+               element == 2){
+               return 2;
+           }
+       }
+   }
+   return 0;
+}
+function checkCounterDiagonal(matrix){//checks for a negative slope diagonal
+   for (var row = 0; row < matrix.length - 3; row++){
+       for (var col = 3; col < matrix[row].length; col++){
+           var element = matrix[row][col];
+           if (element == matrix[row + 1][col - 1] && 
+               element == matrix[row + 2][col - 2] && 
+               element == matrix[row + 3][col - 3] &&
+               element == 1){
+               return 1;
+           }if (element == matrix[row + 1][col - 1] && 
+               element == matrix[row + 2][col - 2] && 
+               element == matrix[row + 3][col - 3] &&
+               element == 2){
+               return 2;
+           }
+       }
+   }
+   return 0;
+}
+//CALLS ALL HELPERS ABOVE to determine if there is win
+//will return 0, 1, 2       0 means no one won just yet
+//takes in the board matrix as parameter
+function determineWin(matrix){
+   return  checkRows(matrix) + checkColumns(matrix) + checkMainDiagonal(matrix) + checkCounterDiagonal(matrix);
+}
+ 
+
+//pushes a move into the move history stack
+function pushToMoveHistory(row,col){
+   moveHistory.push([row,col]);
+}
+//removes the last piece that was placed
+function undoMove() {
+   var top = moveHistory[moveHistory.length -1];//gets the "top" of the stack
+   board[top[0]][top[1]] = 0; //removes that piece from the board
+   moveHistory.pop();//pops the top
+   updateBoard();//updates the display
+   writetoDatabase();//updates the database
+    
+   
+}
+
+//resets the board
+function clearBoard() {
+   //all values back to 0
+   for(x = 0; x < ROWS; x++){
+      for(y = 0; y < COLS; y++)
+         board[x][y] = 0;
+   }
+   win = false;// nobody won
+   turn = 1;// current turn is now player 1
+   document.getElementById("colorTurn").innerHTML="Yellow/your Turn";//changes the on top of board to display yellow players turn 
+   updateBoard();
+   writetoDatabase();//updates the database
+}
+
+
 </script>
+<!--*************************************JAVASCRIPT***********END**********************************************-->
+
+
 
 
 <!--Every thing in this p tag: Displays a bunch of stuff like leaderboard and player list-->
 <p>
    <div id="player_list" class="box">Player List
       <?php
-         $currentUserName = $_SESSION["username"];
-
-
+         $currentUserName = $_SESSION["username"];//session is a global variable for current username
          $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-
-
          $sql = "SELECT username FROM users";
          $result = $conn->query($sql);
 
          if ($result->num_rows > 0) {
             // output data of each row
             while($row = $result->fetch_assoc()) {
-               echo "<br> Name: ". $row["username"].  "<br>";
-               
+               echo "<br>". $row["username"].  "<br>";
             }
-         } else {
+         }else {
             echo "<br> 0 results";
          }
-         $conn->close();
-      
+         
       ?>
    </div>
 
    <div id="friends_list" class="box">Friends List
       <?php
-
          $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-
-
          $sql = "SELECT * FROM `Friends` WHERE `friend1Username` = '$currentUserName'  OR `friend2Username` = '$currentUserName' ";
          $result = $conn->query($sql);
 
          if ($result->num_rows > 0) {
             // output data of each row
             while($row = $result->fetch_assoc()) {
-              
                if ($row["friend1Username"] === $currentUserName){
-                  echo "<br> Name: ". $row["friend2Username"].  "<br>";
+                  echo "<br>". $row["friend2Username"].  "<br>";
                }else{
-                  echo "<br> Name: ". $row["friend1Username"].  "<br>";
+                  echo "<br>". $row["friend1Username"].  "<br>";
                }
-           
             }
          } else {
             echo "<br> 0 results";
          }
-         $conn->close();
-
+  
       ?>
    </div>
 
    <div id="leaderboard" class="box">Leaderboard
       <?php
-
          $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-
-
          $sql = "SELECT username, wins, losses FROM users ORDER BY wins DESC";
          $result = $conn->query($sql);
-
          if ($result->num_rows > 0) {
             // output data of each row
             $counter = 0;
@@ -443,7 +593,7 @@ function determine_win(player){
             } 
                
          }
-         $conn->close();
+      
 
       ?>
    </div>
@@ -451,14 +601,10 @@ function determine_win(player){
    <div id="match_history" class="box"> Match History
       <?php
          $currentUserName = $_SESSION["username"];
-
          $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-
-
          $sql = "SELECT * FROM `MatchHistory` WHERE `player1` = '$currentUserName' ";
          $result = $conn->query($sql);
          $outcome = "";
-
          if ($result->num_rows > 0) {
             // output data of each row
             while ($row = $result->fetch_assoc()) {
@@ -468,11 +614,9 @@ function determine_win(player){
                   $outcome = "lost.";
                }
                echo "<br>" . $row["player1"]. " played against ". $row["player2"].  " and ". $outcome.  "<br>";
-            } 
-               
-            
+            }  
          }
-         $conn->close();
+    
 
       ?>
    </div>
@@ -483,8 +627,11 @@ function determine_win(player){
          $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
 
          //search through FriendRequests table for current username
-         $result = $conn->query("SELECT * FROM `FriendRequests` WHERE `requester` = '$currentUserName' ");
-         $result2 = $conn->query("SELECT * FROM `FriendRequests` WHERE `requestee` = '$currentUserName' ");
+         $result = $conn->query("SELECT * FROM `FriendRequests` WHERE `requester` = '$currentUserName' ");//
+         $result2 = $conn->query("SELECT * FROM `FriendRequests` WHERE `requestee` = '$currentUserName' ");//
+
+         $result3 = $conn->query("SELECT * FROM `GameInvites` WHERE `inviter` = '$currentUserName' ");//
+         $result4 = $conn->query("SELECT * FROM `GameInvites` WHERE `invitee` = '$currentUserName' ");//
 
          /*initialized to be empty
          $cantFindUserError = "";*/
@@ -494,7 +641,14 @@ function determine_win(player){
          } 
          while ($row = $result2->fetch_assoc()) {
             echo "<br>You have a friend request from " . $row["requester"].  "<br>";
-         }       
+         }   
+
+         while ($row = $result3->fetch_assoc()) {
+            echo "<br>Your invitation to " . $row["inviter"].  " is pending <br>";
+         } 
+         while ($row = $result4->fetch_assoc()) {
+            echo "<br>You have an from " . $row["invitee"].  "<br>";
+         }          
             
          $conn->close();
 
@@ -502,19 +656,20 @@ function determine_win(player){
    </div>
 
 
-   <h2>Send Friend Request </h2>
+   <h3>Send Friend Request </h3>
       <form action = "friendsAndInvites\friendRequest.php" method= "post">
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Send">
       </form>
       <!--<span class="help-block"><?php //echo $username_err; ?></span>-->
-   <h2>Invite Friend to Game</h2>
+   <h3>Invite Friend to Game</h3>
       <form action = "friendsAndInvites\inviteFriend.php" method= "post">
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Invite">
       </form>
-      
-   <h2>Respond to Friend Request </h2>
+
+   <div>Respond to Friend Request
+   
       <form action = "friendsAndInvites\acceptFriendRequest.php" method= "post">
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Accept">
@@ -523,7 +678,8 @@ function determine_win(player){
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Deny">
       </form>
-   <h2>Respond to Invite</h2>
+   </div>
+   <h3>Respond to Invite</h3>
       <form action = "friendsAndInvites\acceptInviteFriend.php" method= "post">
          <b>Type their username:</b> <input type = "text" name = "user_name">
          <input type = "submit" value="Accept">

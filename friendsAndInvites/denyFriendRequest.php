@@ -19,7 +19,7 @@
     //checks if that user even exists
     $searchResults = $conn->query("SELECT * FROM `users` WHERE `username` = '$friendo' ");                                  
 
-    //if no entry found then insert
+    
     if ($result->num_rows != 0 && $searchResults->num_rows != 0) {
         $conn->query("DELETE FROM `FriendRequests` WHERE (`requester` = '$friendo' AND  `requestee` = '$currentUserName' )");                              
     }
