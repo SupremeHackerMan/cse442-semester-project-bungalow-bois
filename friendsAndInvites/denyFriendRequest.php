@@ -21,9 +21,6 @@
 
     //if no entry found then insert
     if ($result->num_rows != 0 && $searchResults->num_rows != 0) {
-        $sqlQuery2 = "INSERT INTO `Friends` (`friend1Username`,  `friend2Username`) 
-                                        VALUES ('$currentUserName', '$friendo') ";  
-        $conn->query($sqlQuery2); 
         $conn->query("DELETE FROM `FriendRequests` WHERE (`requester` = '$friendo' AND  `requestee` = '$currentUserName' )");                              
     }
 
