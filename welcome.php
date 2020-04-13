@@ -42,25 +42,6 @@
 <body>
 
 
-<<<<<<< Updated upstream
-<h1>Connect 4</h1>
-<button id="start_button"  type="button" class="start">start!</button>
-<img id="start" src="start_screen.jpg"></img>
-<div id="container"></div>
-
-
-<button id="button1" type="button" class="block" style="visibility: hidden;">Col1</button>
-<button id="button2" type="button" class="block" style="visibility: hidden;">Col2</button>
-<button id="button3" type="button" class="block" style="visibility: hidden;">Col3</button>
-<button id="button4" type="button" class="block" style="visibility: hidden;">Col4</button>
-<button id="button5" type="button" class="block" style="visibility: hidden;">Col5</button>
-<button id="button6" type="button" class="block" style="visibility: hidden;">Col6</button>
-<button id="button7" type="button" class="block" style="visibility: hidden;">Col7</button>
-<button id="undo" type="button" class="block" style="visibility: hidden;">Undo</button>
-
-
-
-=======
 <H1>Neck 4 - Local Multiplayer Mode</H1>
 
 <!--links to css file-->
@@ -129,7 +110,6 @@
 
 
 <!--*************************************JAVASCRIPT***********Start**********************************************-->
->>>>>>> Stashed changes
 <script>
 
 const COLS = 7;
@@ -140,67 +120,6 @@ var board = [];
 var turn = 1; //1 for Yellow, 2 for Red
 var win = false;
 
-<<<<<<< Updated upstream
-var p1_move_history = [];
-var p1_move_number = 0;
-
-var p2_move_history = [];
-var p2_move_number = 0;
-
-var move_column = [];
-
-for(x = 0; x < ROWS; x++){
-   board[x] = []
-   for(y = 0; y < COLS; y++){
-      board[x][y] = 0;
-   }
-}
-
-//displays da board
-document.getElementById('start_button').onclick = function() {
-   create_board(board);
-   print_board();
-   document.getElementById('start').src="";
-   document.getElementById('button1').style.visibility="visible";
-   document.getElementById('button2').style.visibility="visible";
-   document.getElementById('button3').style.visibility="visible";
-   document.getElementById('button4').style.visibility="visible";
-   document.getElementById('button5').style.visibility="visible";
-   document.getElementById('button6').style.visibility="visible";
-   document.getElementById('button7').style.visibility="visible";
-   document.getElementById('start_button').style.visibility="hidden";
-   document.getElementById('undo').style.visibility="visible";
-
-}
-
-document.getElementById('button1').onclick = function() {
-   place_piece(0);
-};
-document.getElementById('button2').onclick = function() {
-   place_piece(1);
-};
-document.getElementById('button3').onclick = function() {
-   place_piece(2);
-};
-document.getElementById('button4').onclick = function() {
-   place_piece(3);
-};
-document.getElementById('button5').onclick = function() {
-   place_piece(4);
-};
-document.getElementById('button6').onclick = function() {
-   place_piece(5);
-};
-document.getElementById('button7').onclick = function() {
-   place_piece(6);
-};
-document.getElementById('undo').onclick = function() {
-   remove_piece(move_column[move_column.length - 1]);
-};
-
-// creates a fresh board
-function create_board(board){
-=======
 //saves all moves into a "stack"    -   this is for the undo button
 //ex. if p1 makes a move at positions board[1][2] then [1,2] will be pushed to the stack
 var moveHistory = [];
@@ -217,85 +136,17 @@ var board = [
    [0, 0, 0, 0, 0, 0, 0]
  ];*/ 
 function newBoard(board){
->>>>>>> Stashed changes
    for(x = 0; x < ROWS; x++){
       board[x] = []
       for(y = 0; y < COLS; y++){
          board[x][y] = 0;
-<<<<<<< Updated upstream
-   }
-}
-
-}
-// given a column finds first open spot then puts that players piece into the hole
-function place_piece(column){
-
-   if(turn == 1){
-       p1_move_number++;
-       p1_move_history[p1_move_number] = column + 1;
-       move_column.push(column);
-   }
-   else{
-       p2_move_number++;
-       p2_move_history[p2_move_number] = column + 1;
-       move_column.push(column);
-   }
-
-    // add check here to see if col is full
-   for (var i = 0; i < ROWS; i++){
-      if(board[i][column] == 1 || board[i][column] == 2){
-         if(turn == 1){
-            board[i - 1][column] = 1;
-            win = determine_win(turn);
-            turn = 2;
-         }
-         else{
-            board[i - 1][column] = 2;
-            win = determine_win(turn);
-            turn = 1;
-         }
-         print_board();
-         return;
-=======
->>>>>>> Stashed changes
       }
    }
 }
 newBoard(board);
 
-<<<<<<< Updated upstream
-function remove_piece(column){
-   for (var i = 0; i < ROWS; i++){
-      if(board[i][column] != 0) {
-         board[i][column] = 0;
-         break;
-      }
-   }
-   move_column.pop();
-   update_board();
-}
-
-
-//increments the wins by
-function update_datatbase_wins_and_stuff(){
-   <?php
-      $currentUserName = $_SESSION["username"];
-      $HOST = 'tethys.cse.buffalo.edu';
-      $USERNAME = 'jling2';
-      $USERPASSWORD = "50244515";
-      $DBNAME = "cse442_542_2020_spring_teaml_db";
-
-      $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-      $sql = "UPDATE users SET wins = wins + 1 WHERE  username = '$currentUserName' ";
-      $sql2 = "INSERT INTO MatchHistory (player1, player2, win) VALUES ('$currentUserName', 'Placeholder BOT', 1)";
-      $conn->query($sql);
-      $conn->query($sql2);
-      $conn->close();
-      ?>
-=======
 //read the board from the table on tethys. Its stored there as 6 strings each one corresponds to a row
 function readFromDatabase(){
->>>>>>> Stashed changes
 
 }
 
@@ -635,21 +486,27 @@ function clearBoard() {
 
          /*initialized to be empty
          $cantFindUserError = "";*/
-       
-         while ($row = $result->fetch_assoc()) {
-            echo "<br>Your friend request to " . $row["requestee"].  " is pending <br>";
-         } 
-         while ($row = $result2->fetch_assoc()) {
-            echo "<br>You have a friend request from " . $row["requester"].  "<br>";
-         }   
 
-         while ($row = $result3->fetch_assoc()) {
-            echo "<br>Your invitation to " . $row["inviter"].  " is pending <br>";
-         } 
-         while ($row = $result4->fetch_assoc()) {
-            echo "<br>You have an from " . $row["invitee"].  "<br>";
-         }          
-            
+         if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+               echo "<br>Your friend request to " . $row["requestee"].  " is pending <br>";
+            } 
+         }
+         if($result2->num_rows > 0){
+            while ($row = $result2->fetch_assoc()) {
+               echo "<br>You have a friend request from " . $row["requester"].  "<br>";
+            }   
+         }
+         if($result3->num_rows > 0){
+            while ($row = $result3->fetch_assoc() ) {
+               echo "<br>Your invitation to " . $row["inviter"].  " is pending <br>";
+            } 
+         }
+         if($result4->num_rows > 0){
+            while ($row = $result4->fetch_assoc() ) {
+               echo "<br>You have an invitation from " . $row["invitee"].  "<br>";
+            }          
+         }
          $conn->close();
 
       ?>
