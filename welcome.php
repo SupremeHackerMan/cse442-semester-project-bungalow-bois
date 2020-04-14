@@ -234,7 +234,7 @@ function selectColumn(col) {
          win = true;
          <?php
             $sql = "UPDATE users SET wins = wins + 1 WHERE  username = '$currentUserName' ";//updates your win (increments it by 1)
-            $sql2 = "INSERT INTO MatchHistory (player1, player2, win) VALUES ('$currentUserName', 'computer', 1)";//updates your match history 
+            $sql2 = "INSERT INTO `MatchHistory` (player1, player2, win) VALUES ('$currentUserName', 'Player 2', 1)";//updates match history table: 1 means win 0 means lose 
             $conn->query($sql);
             $conn->query($sql2);
          ?>
@@ -243,7 +243,7 @@ function selectColumn(col) {
          document.getElementById("colorTurn").innerHTML="Red Wins!";
          win = true;
          <?php
-            $sql2 = "INSERT INTO MatchHistory (player1, player2, win) VALUES ('$currentUserName', 'computer', 1)";//you lost lol
+            $sql2 = "INSERT INTO `MatchHistory` (player1, player2, win) VALUES ('$currentUserName', 'Player 2', 0)";//you lost lol
             $conn->query($sql2);
          ?>
       }
@@ -357,12 +357,13 @@ function pushToMoveHistory(row,col){
 }
 //removes the last piece that was placed
 function undoMove() {
-   var top = moveHistory[moveHistory.length -1];//gets the "top" of the stack
-   board[top[0]][top[1]] = 0; //removes that piece from the board
-   moveHistory.pop();//pops the top
-   updateBoard();//updates the display
-   writetoDatabase();//updates the database
-    
+   if(!win){//undo only works when nobody has won
+      var top = moveHistory[moveHistory.length -1];//gets the "top" of the stack
+      board[top[0]][top[1]] = 0; //removes that piece from the board
+      moveHistory.pop();//pops the top
+      updateBoard();//updates the display
+      writetoDatabase();//updates the database
+   }
    
 }
 
