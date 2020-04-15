@@ -1,22 +1,5 @@
-<?php
-// Initialize the session
-session_start();
- 
-// Check if the user is logged in, if not then redirect him to login page
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-    header("location: login.php");
-    exit;
-}
-
-if($_SESSION['loggedin']==true)
-    { 
-      echo "Logged in as ". $_SESSION["username"];
-    }
-?>
- 
 <!DOCTYPE html>
 <html>
-<a href="logout.php" class="btn btn-danger">Log Out</a>
 
 <head>
   <link rel="stylesheet" href="style.css">
@@ -36,7 +19,6 @@ if($_SESSION['loggedin']==true)
 <button id="button5" type="button" class="block" style="visibility: hidden;">Col5</button>
 <button id="button6" type="button" class="block" style="visibility: hidden;">Col6</button>
 <button id="button7" type="button" class="block" style="visibility: hidden;">Col7</button>
-
 
 
 
@@ -76,6 +58,38 @@ document.getElementById('start_button').onclick = function() {
    document.getElementById('button6').style.visibility="visible";
    document.getElementById('button7').style.visibility="visible";
    document.getElementById('start_button').style.visibility="hidden";
+
+    var wins = 0
+
+   <?php
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $database = "cse442_proj";
+
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $database);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    $sql = "SELECT playerWins FROM players WHERE playerName='Jamie'";
+    $result = $conn->query($sql);
+
+    $test = $result->fetch_assoc();
+
+    print($test['playerWins']);
+    ?>
+    
+    <script type="text/javascript"> 
+      alert('GeeksforGeeks!'); 
+    </script> 
+
+    console.log(wins)
+
+    
 
 }
 document.getElementById('button1').onclick = function() {
@@ -277,88 +291,5 @@ function determine_win(player){
 
 </script>
 
-
-<p>
-
-   
-   <div id="player_list" class="box">Player List
-      <?php
-         $currentUserName = $_SESSION["username"];
-
-         $HOST = 'tethys.cse.buffalo.edu';
-         $USERNAME = 'jling2';
-         $USERPASSWORD = "50244515";
-         $DBNAME = "cse442_542_2020_spring_teaml_db";
-
-         $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-
-
-         $sql = "SELECT username FROM users";
-         $result = $conn->query($sql);
-
-         if ($result->num_rows > 0) {
-            // output data of each row
-            while($row = $result->fetch_assoc()) {
-               echo "<br> Name: ". $row["username"].  "<br>";
-               
-            }
-         } else {
-            echo "0 results";
-         }
-         $conn->close();
-      
-      ?>
-   </div>
-
-   <div id="friends_list" class="box">Friends List
-      <?php
-
-
-         $HOST = 'tethys.cse.buffalo.edu';
-         $USERNAME = 'jling2';
-         $USERPASSWORD = "50244515";
-         $DBNAME = "cse442_542_2020_spring_teaml_db";
-
-         $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-
-
-         $sql = "SELECT * FROM `Friends` WHERE `friend1Username` = '$currentUserName'  OR `friend2Username` = '$currentUserName' ";
-         $result = $conn->query($sql);
-
-         if ($result->num_rows > 0) {
-            // output data of each row
-            while($row = $result->fetch_assoc()) {
-              
-               if ($row["friend1Username"] = '$currentUserName'){
-                  echo "<br> Name: ". $row["friend2Username"].  "<br>";
-               }else{
-                  echo "<br> Name: ". $row["friend1Username"].  "<br>";
-               }
-           
-            }
-         } else {
-            echo "0 results";
-         }
-         $conn->close();
-
-      ?>
-   </div>
-
-   <h2>Add a Friend </h2>
-      <form action = "friendRequest.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "friend_user_name">
-         <input type = "submit">
-      </form>
-   <h2>Challenge Another Player</h2>
-      <form action = "challengePlayer.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "placeholder">
-         <input type = "submit">
-      </form>
-
-</p>
-
-<!-- 
-   
-            -->
 </body>
 </html>
