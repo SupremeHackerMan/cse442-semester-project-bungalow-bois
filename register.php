@@ -12,7 +12,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate username
     if(empty(trim($_POST["username"]))){
         $username_err = "Please enter a username.";
-    } else{
+    } if((strpos((trim($_POST["username"])), "<")) !== false ){//blocks attempts to insert html tags (it needs that "!== false" for some reason even tho its already a boolean)
+        $username_err = "No '<' characters please.";
+    }else{
         // Prepare a select statement
         $sql = "SELECT id, username, password FROM users WHERE username = ?";
         
