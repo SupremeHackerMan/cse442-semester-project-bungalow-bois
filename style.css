@@ -1,10 +1,61 @@
+/*
 .row { display: flex; font-size: 12px; text-align: center; color: red; }
 .cell { width: 50px; height: 50px; margin: 1px; border: 1px solid black;}
 .player1 { width: 50px; height: 50px; margin: 1px; border: 1px solid black; background-color: red;}
 .player2 { width: 50px; height: 50px; margin: 1px; border: 1px solid black; background-color: blue;}
+.undo { width: 50px; height: 50px; margin: 1px; border: 1px solid black; background-color: gray;}
 
 .block { border:  1px solid black; background-color: gray; width: 50px; font-size: 12px; text-align: center;}
-.start { width: 480px; height: 50px; margin: 0px; border: 1px solid black; background-color: gray; position: absolute;}
+.start { padding: 5px 5px; display: block; width: 480px; height: 50px; margin: 30px; border: 1px solid black; background-color: gray;}
+*/
+.btn-container { width: 50px; height: 165px;}
+
+
+
+
+
+BODY {
+font-family: 'Open Sans', sans-serif;
+color: #0044AA;
+text-align: center;
+}
+H1 {
+font-size: 24px;
+}
+
+#colorTurn {
+font-size: 18px;
+}
+
+#board {
+margin: 20px auto;
+display: table;
+width: 415px;
+height: 360px;
+padding: 10px;
+background: #0077EE;
+border: 1px solid #0044AA;
+border-radius: 5px;
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+border-spacing: 5px 5px;
+}
+
+.row {
+display: table-row;
+}
+
+.cell {
+display: table-cell;
+background-color: #FFFFFF;
+width: 50px;
+height: 50px;
+-webkit-border-radius: 50%;
+-moz-border-radius: 50%;
+border-radius: 50%;
+margin: 2px;
+}
 .box {
     float: left;
     width: 225px;
@@ -13,5 +64,9 @@
     margin-top: 10px;
     padding: 5px;
     overflow:scroll;
+    border: 2px black;
+}
+.box2 {
+    float: left;
     border: 2px black;
 }
