@@ -119,6 +119,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             </div>
             <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
         </form>
-    </div>    
+    </div>   
+    <div>
+        this is my test no touchy -jackie
+        <a href="TESTicles.php">Test</a>
+    </div> 
 </body>
 </html>
