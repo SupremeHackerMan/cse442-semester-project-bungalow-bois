@@ -50,70 +50,72 @@
 <div id="colorTurn">Yellow Turn (Thats You)</div>
 <div id="board">
 <div class="row">
-  <div class="cell" id="cell00" onclick="selectColumn(0)"></div>
-  <div class="cell" id="cell01" onclick="selectColumn(1)"></div>
-  <div class="cell" id="cell02" onclick="selectColumn(2)"></div>
-  <div class="cell" id="cell03" onclick="selectColumn(3)"></div>
-  <div class="cell" id="cell04" onclick="selectColumn(4)"></div>
-  <div class="cell" id="cell05" onclick="selectColumn(5)"></div>
-  <div class="cell" id="cell06" onclick="selectColumn(6)"></div>
+  <div class="cell" id="cell0-0" onclick="selectColumn(0)"></div>
+  <div class="cell" id="cell0-1" onclick="selectColumn(1)"></div>
+  <div class="cell" id="cell0-2" onclick="selectColumn(2)"></div>
+  <div class="cell" id="cell0-3" onclick="selectColumn(3)"></div>
+  <div class="cell" id="cell0-4" onclick="selectColumn(4)"></div>
+  <div class="cell" id="cell0-5" onclick="selectColumn(5)"></div>
+  <div class="cell" id="cell0-6" onclick="selectColumn(6)"></div>
 </div>
 <div class="row">  
-  <div class="cell" id="cell10" onclick="selectColumn(0)"></div>
-  <div class="cell" id="cell11" onclick="selectColumn(1)"></div>
-  <div class="cell" id="cell12" onclick="selectColumn(2)"></div>
-  <div class="cell" id="cell13" onclick="selectColumn(3)"></div>
-  <div class="cell" id="cell14" onclick="selectColumn(4)"></div>
-  <div class="cell" id="cell15" onclick="selectColumn(5)"></div>
-  <div class="cell" id="cell16" onclick="selectColumn(6)"></div>
+  <div class="cell" id="cell1-0" onclick="selectColumn(0)"></div>
+  <div class="cell" id="cell1-1" onclick="selectColumn(1)"></div>
+  <div class="cell" id="cell1-2" onclick="selectColumn(2)"></div>
+  <div class="cell" id="cell1-3" onclick="selectColumn(3)"></div>
+  <div class="cell" id="cell1-4" onclick="selectColumn(4)"></div>
+  <div class="cell" id="cell1-5" onclick="selectColumn(5)"></div>
+  <div class="cell" id="cell1-6" onclick="selectColumn(6)"></div>
 </div>
 <div class="row">  
-  <div class="cell" id="cell20" onclick="selectColumn(0)"></div>
-  <div class="cell" id="cell21" onclick="selectColumn(1)"></div>
-  <div class="cell" id="cell22" onclick="selectColumn(2)"></div>
-  <div class="cell" id="cell23" onclick="selectColumn(3)"></div>
-  <div class="cell" id="cell24" onclick="selectColumn(4)"></div>
-  <div class="cell" id="cell25" onclick="selectColumn(5)"></div>
-  <div class="cell" id="cell26" onclick="selectColumn(6)"></div>
+  <div class="cell" id="cell2-0" onclick="selectColumn(0)"></div>
+  <div class="cell" id="cell2-1" onclick="selectColumn(1)"></div>
+  <div class="cell" id="cell2-2" onclick="selectColumn(2)"></div>
+  <div class="cell" id="cell2-3" onclick="selectColumn(3)"></div>
+  <div class="cell" id="cell2-4" onclick="selectColumn(4)"></div>
+  <div class="cell" id="cell2-5" onclick="selectColumn(5)"></div>
+  <div class="cell" id="cell2-6" onclick="selectColumn(6)"></div>
 </div>
 <div class="row">  
-  <div class="cell" id="cell30" onclick="selectColumn(0)"></div>
-  <div class="cell" id="cell31" onclick="selectColumn(1)"></div>
-  <div class="cell" id="cell32" onclick="selectColumn(2)"></div>
-  <div class="cell" id="cell33" onclick="selectColumn(3)"></div>
-  <div class="cell" id="cell34" onclick="selectColumn(4)"></div>
-  <div class="cell" id="cell35" onclick="selectColumn(5)"></div>
-  <div class="cell" id="cell36" onclick="selectColumn(6)"></div>
+  <div class="cell" id="cell3-0" onclick="selectColumn(0)"></div>
+  <div class="cell" id="cell3-1" onclick="selectColumn(1)"></div>
+  <div class="cell" id="cell3-2" onclick="selectColumn(2)"></div>
+  <div class="cell" id="cell3-3" onclick="selectColumn(3)"></div>
+  <div class="cell" id="cell3-4" onclick="selectColumn(4)"></div>
+  <div class="cell" id="cell3-5" onclick="selectColumn(5)"></div>
+  <div class="cell" id="cell3-6" onclick="selectColumn(6)"></div>
 </div>
 <div class="row">
-  <div class="cell" id="cell40" onclick="selectColumn(0)"></div>
-  <div class="cell" id="cell41" onclick="selectColumn(1)"></div>
-  <div class="cell" id="cell42" onclick="selectColumn(2)"></div>
-  <div class="cell" id="cell43" onclick="selectColumn(3)"></div>
-  <div class="cell" id="cell44" onclick="selectColumn(4)"></div>
-  <div class="cell" id="cell45" onclick="selectColumn(5)"></div>
-  <div class="cell" id="cell46" onclick="selectColumn(6)"></div>
+  <div class="cell" id="cell4-0" onclick="selectColumn(0)"></div>
+  <div class="cell" id="cell4-1" onclick="selectColumn(1)"></div>
+  <div class="cell" id="cell4-2" onclick="selectColumn(2)"></div>
+  <div class="cell" id="cell4-3" onclick="selectColumn(3)"></div>
+  <div class="cell" id="cell4-4" onclick="selectColumn(4)"></div>
+  <div class="cell" id="cell4-5" onclick="selectColumn(5)"></div>
+  <div class="cell" id="cell4-6" onclick="selectColumn(6)"></div>
 </div>
 <div class="row">
-  <div class="cell" id="cell50" onclick="selectColumn(0)"></div>
-  <div class="cell" id="cell51" onclick="selectColumn(1)"></div>
-  <div class="cell" id="cell52" onclick="selectColumn(2)"></div>
-  <div class="cell" id="cell53" onclick="selectColumn(3)"></div>
-  <div class="cell" id="cell54" onclick="selectColumn(4)"></div>
-  <div class="cell" id="cell55" onclick="selectColumn(5)"></div>
-  <div class="cell" id="cell56" onclick="selectColumn(6)"></div>
+  <div class="cell" id="cell5-0" onclick="selectColumn(0)"></div>
+  <div class="cell" id="cell5-1" onclick="selectColumn(1)"></div>
+  <div class="cell" id="cell5-2" onclick="selectColumn(2)"></div>
+  <div class="cell" id="cell5-3" onclick="selectColumn(3)"></div>
+  <div class="cell" id="cell5-4" onclick="selectColumn(4)"></div>
+  <div class="cell" id="cell5-5" onclick="selectColumn(5)"></div>
+  <div class="cell" id="cell5-6" onclick="selectColumn(6)"></div>
 </div>
 </div>
 <input id="resetButton" type="button" value="Undo" onclick="undoMove()" /></br></br><!--button to undo a move-->
 <input id="resetButton" type="button" value="Clear/Start New Game" onclick="clearBoard()" /></br></br><!--resets the board button-->
 
-
+<p><a href="https://www-student.cse.buffalo.edu/CSE442-542/2020-spring/cse-442l/connect5.php">Play Connect 5</a></p>
+<p><a href="https://www-student.cse.buffalo.edu/CSE442-542/2020-spring/cse-442l/connect6.php">Play Connect 6</a></p>
+<p><a href="https://www-student.cse.buffalo.edu/CSE442-542/2020-spring/cse-442l/connect8.php">Play Connect 8</a></p>
 
 <!--*************************************JAVASCRIPT***********Start**********************************************-->
 <script>
 
-const COLS = 7;
-const ROWS = 6;
+const COLS = 7;//default is 7
+const ROWS = 6;//default is 6
 const chainSize = 4// default is 4 consecutive pieces to win
 
 var board = [];
@@ -253,14 +255,14 @@ function selectColumn(col) {
 
 //refreshes the connect 4 board after each turn
 function updateBoard() {
-  for (var row = 0; row < 6; row++) {
-    for (var col = 0; col < 7; col++) {
+  for (var row = 0; row < ROWS; row++) {
+    for (var col = 0; col < COLS; col++) {
       if (board[row][col]==0) { 
-                document.getElementById("cell"+row+col).style.backgroundColor="#FFFFFF";
+                document.getElementById("cell"+row+"-"+col).style.backgroundColor="#FFFFFF";
       } else if (board[row][col]==1) { //1 for yellow
-                document.getElementById("cell"+row+col).style.backgroundColor="#FFFF00";
+                document.getElementById("cell"+row+"-"+col).style.backgroundColor="#FFFF00";
       } else if (board[row][col]==2) { //1 for yellow
-                document.getElementById("cell"+row+col).style.backgroundColor="#FF0000";
+                document.getElementById("cell"+row+"-"+col).style.backgroundColor="#FF0000";
        }
     }
   }  
