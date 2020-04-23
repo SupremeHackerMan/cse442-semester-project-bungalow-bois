@@ -1,4 +1,6 @@
 <?php
+   ini_set('display_errors', 1); 
+   error_reporting(E_ALL);
    // Initialize the session
    session_start();
 
@@ -35,7 +37,8 @@
 <head>
   
 </head>
-<body>
+<!--loads the board first thing when page refreshes -->
+<body onload="loadBoard()">
 
 
 <H1>Neck 4 - Local Multiplayer Mode</H1>
@@ -43,7 +46,9 @@
 <!--links to css file-->
 <link rel="stylesheet" href="style.css">
 
-<div id="colorTurn">Yellow Turn (Thats You)</div>
+
+
+<div id="colorTurn">Yellow Turn (YOU)</div>
 <div id="board">
 <div class="row">
   <div class="cell" id="cell00" onclick="selectColumn(0)"></div>
@@ -100,9 +105,9 @@
   <div class="cell" id="cell56" onclick="selectColumn(6)"></div>
 </div>
 </div>
-<input id="resetButton" type="button" value="Undo" onclick="undoMove()" /></br></br><!--button to undo a move-->
+<input id="undoButton" type="button" value="Undo" onclick="undoMove()" /></br></br><!--button to undo a move-->
 <input id="resetButton" type="button" value="Clear/Start New Game" onclick="clearBoard()" /></br></br><!--resets the board button-->
-
+<!--<input id="loadButton" type="button" value="Load Game" onclick="loadBoard()" /></br></br>-->
 
 
 <!--*************************************JAVASCRIPT***********Start**********************************************-->
@@ -120,9 +125,21 @@ var win = false;
 //ex. if p1 makes a move at positions board[1][2] then [1,2] will be pushed to the stack
 var moveHistory = [];
 
+
+//resets the board stored in the database
+function clearDbBoard(){
+   <?php
+    
+   
+      $sql = "UPDATE `SavedOfflineGames` SET row0 = '0000000', row1 = '0000000', row2 = '0000000', row3 = '00000003', row4 = '0000000', row5 = '0000000' 
+                                          WHERE username = '$currentUserName'" ;                          
+      $link->query($sql);   
+   
+   ?>
+}
+
+
 /*
-INITIALIZE A NEW BOARD
-should look like this
 var board = [
    [0, 0, 0, 0, 0, 0, 0],
    [0, 0, 0, 0, 0, 0, 0],
@@ -138,94 +155,41 @@ function newBoard(board){
          board[x][y] = 0;
       }
    }
-   <?php
-
-      $check = $link->query("SELECT * FROM `SavedOfflineGames` WHERE `username` = '$currentUserName' ");//checks if players saved game is there or not
-
-      if ($check->num_rows == 0) {//if not there create a new entry
-         $sql = "INSERT INTO `SavedOfflineGames` (username, row0, row1, row2, row3, row4, row5) 
-                                    VALUES ('$currentUserName', '0000000', '0000000','0000000','0000000','0000000','0000000')";
-         $link->query($check);   
-      }else{//if its there it will update the existing one
-         $sql = "UPDATE `SavedOfflineGames` SET row0 = '0000000', row1 = '0000000', row2 = '0000000', row3 = '00000003', row4 = '0000000', row5 = '0000000' 
-                                          WHERE username = '$currentUserName'" ;                          
-         $link->query($check);   
-      }
-   ?>
 }
 newBoard(board);
-
-
-
-
-//read the board from the table on tethys. Its stored there as 6 strings each one corresponds to a row
-function loadBoard(){
-   var xmlhttp = new XMLHttpRequest();
-   xmlhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-         var fromTable = (this.responseText).split("");
-         var idx = 0;
-         for (var i = 0; i < ROWS; i++) {
-               for (var j = 0; i < COLS; j++) {
-                  if(idx >= COLS * ROWS){
-                     break;
-                  }
-                  board[i][j] = parseInt(fromTable[idx]);
-                  console.log(board[i][j]);
-                  idx++;
-                  
-               }
-         }
-      }
-   };
-   xmlhttp.open("GET", "saveOfflineGame/save.php", true);
-   xmlhttp.send();
-}
-
-//writes the board onto the database
-//function writetoDatabase(){
-function saveBoard(){
-   //convert each row into strings
-   var r0 = board[0].join('');
-   var r1 = board[1].join('');
-   var r2 = board[2].join('');
-   var r3 = board[3].join('');
-   var r4 = board[4].join('');
-   var r5 = board[5].join('');
-
-
-   //puts the strings into cookies so the variables can be accessed using php
-   document.cookie = "row0=" + r0 + "; max-age=7200";
-   document.cookie = "row1=" + r1 + "; max-age=7200";
-   document.cookie = "row2=" + r2 + "; max-age=7200";
-   document.cookie = "row3=" + r3 + "; max-age=7200";
-   document.cookie = "row4=" + r4 + "; max-age=7200";
-   document.cookie = "row5=" + r5 + "; max-age=7200";
-
-   <?php
-      //retrieves the data from the cookies
-      $row0 = $_COOKIE["row0"];
-      $row1 = $_COOKIE["row1"];
-      $row2 = $_COOKIE["row2"];
-      $row3 = $_COOKIE["row3"];
-      $row4 = $_COOKIE["row4"];
-      $row5 = $_COOKIE["row5"];
-
-      $result = $link->query("SELECT * FROM `SavedOfflineGames` WHERE `username` = '$currentUserName' ");//checks if players saved game is there or not
-
-      if ($result->num_rows == 0) {//if not there create a new entry
-         $sql = "INSERT INTO `SavedOfflineGames` (username, row0, row1, row2, row3, row4, row5) 
-                                    VALUES ('$currentUserName', '$row0', '$row1','$row2','$row3','$row4','$row5')";
-         $link->query($sql);   
-      }else{//if its there it will update the existing one
-         $sql = "UPDATE `SavedOfflineGames` SET row0 = '$row0', row1 = '$row1', row2 = '$row2', row3 = '$row3', row4 = '$row4', row5 = '$row5' 
-                                          WHERE username = '$currentUserName'" ;                          
-         $link->query($sql);   
-      }
-   ?>
+//loads the board from the table on tethys. Its stored there as 6 strings, each one corresponds to a row
+function loadBoard() {
    
+   //localStorage.setItem('init',JSON.stringify("done"));//initializes it only once
+   //if(JSON.parse(localStorage.getItem('init')))
 
+   board = JSON.parse(localStorage.getItem('boardo'));
+   turn = parseInt(JSON.parse(localStorage.getItem('turno')));
+   if(turn == 1){
+      document.getElementById("colorTurn").innerHTML="Yellow Turn (YOU)";
+   }else{
+      document.getElementById("colorTurn").innerHTML="Red Turn";
+   }
+   
+   console.log("loaded turn: "+turn);
+   console.log(board);
+   updateBoard();
 }
+
+function saveBoard(){
+   localStorage.setItem('boardo',JSON.stringify(board));
+   localStorage.setItem('turno',JSON.stringify(turn));
+   console.log("saved turn: "+JSON.stringify(turn));
+   console.log(JSON.stringify(board));
+}
+
+
+
+
+
+
+
+
 
 //this add a game piece to a column and does some other stuff
 function selectColumn(col) {
@@ -238,6 +202,7 @@ function selectColumn(col) {
                row--;
             }else{//otherwise the pieces is placed here
                board[row][col]=1;
+               
                pushToMoveHistory(row,col);//move is pushed into the move history stack
                break;
             }
@@ -252,19 +217,21 @@ function selectColumn(col) {
                row--;
             }else{
                board[row][col]=2;
+               
                pushToMoveHistory(row,col);
                break;
             }
          }
          turn=1;
-         document.getElementById("colorTurn").innerHTML="Yellow Turn";//changes the on top of board to display yellow players turn 
+         document.getElementById("colorTurn").innerHTML="Yellow Turn (YOU)";//changes the on top of board to display yellow players turn 
       }
+      saveBoard();
       updateBoard();//updates the display for the board
-      writetoDatabase();//updates the board to the database
+      
       
       //checks if player1/yellow won
       if(determineWin(board) == 1){
-         document.getElementById("colorTurn").innerHTML="Yellow/You Win!";
+         document.getElementById("colorTurn").innerHTML="Yellow (YOU) Win!";
          win = true;
          <?php
             $sql = "UPDATE users SET wins = wins + 1 WHERE  username = '$currentUserName' ";//updates your win (increments it by 1)
@@ -394,9 +361,9 @@ function undoMove() {
    if(!win){//undo only works when nobody has won
       var top = moveHistory[moveHistory.length -1];//gets the "top" of the stack
       board[top[0]][top[1]] = 0; //removes that piece from the board
+      saveBoard();
       moveHistory.pop();//pops the top
       updateBoard();//updates the display
-      writetoDatabase();//updates the database
    }
    
 }
@@ -410,9 +377,11 @@ function clearBoard() {
    }
    win = false;// nobody won
    turn = 1;// current turn is now player 1
-   document.getElementById("colorTurn").innerHTML="Yellow/your Turn";//changes the on top of board to display yellow players turn 
+   document.getElementById("colorTurn").innerHTML="Yellow Turn (YOU)";//changes the on top of board to display yellow players turn 
+   saveBoard();
    updateBoard();
-   writetoDatabase();//updates the database
+
+   //clearDbBoard();//resets the board data in the database
 }
 
 
