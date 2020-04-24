@@ -1,18 +1,26 @@
 .playInfo{
-    float: left;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 17px;
-}
-.bigTitle {
-
+float: left;
+color: #f2f2f2;
 text-align: center;
-font-family: Arial, Helvetica, sans-serif;
+padding: 14px 16px;
+text-decoration: none;
+font-size: 17px;
+font-family: "Helvetica", sans-serif;
+}
+
+
+.bigTitle {
+text-align: center;
+font-family: "Helvetica", sans-serif;
 font-size: 90px;
 }
 
+h1{
+text-align: center;
+font-family: "Helvetica", sans-serif;
+}
+
+/*black bar*/
 .topnav {
 overflow: hidden;
 background-color: #333;
@@ -25,17 +33,20 @@ text-align: center;
 padding: 14px 16px;
 text-decoration: none;
 font-size: 17px;
+font-family: "Helvetica", sans-serif;
 }
 
 .topnav a:hover {
 background-color: #ddd;
 color: black;
 }
-
+/*the one currently selected*/
 .topnav a.active {
 background-color: #0077EE;
 color: white;
 }
+
+/*greys out the text*/
 .topnav div.inactive {
 float: right;
 color: #f2f2f2;
@@ -43,7 +54,7 @@ text-align: center;
 padding: 14px 16px;
 text-decoration: none;
 font-size: 17px;
-opacity: .05;
+opacity: .15;
 }
 
 .notification {

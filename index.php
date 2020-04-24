@@ -99,16 +99,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         body{ font: 14px sans-serif; }
         .wrapper{ width: 350px; padding: 20px;margin: 0 auto; }
     </style>
-</head>
-<body>
     <!--Navigation bar-->
     <div class="topnav">
         <a class="active" href="#login">Log In</a>
         <div class="inactive" >Settings</div>
+        <div class="inactive" >Play Game</div>
         <div class="inactive" >Friends</div>
         <div class="inactive" >Profile</div>
         <div class="inactive" >Home</div>
     </div>
+</head>
+<body>
+    
     <div class = "bigTitle" >Connect 4</div>
     <div class="wrapper">
         

@@ -6,13 +6,11 @@
 
 
 BODY {
-font-family: 'Open Sans', sans-serif;
+font-family: "Helvetica", sans-serif;
 color: #0044AA;
 text-align: center;
 }
-H1 {
-font-size: 24px;
-}
+
 
 #colorTurn {
 font-size: 18px;

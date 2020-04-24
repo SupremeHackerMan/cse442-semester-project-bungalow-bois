@@ -31,8 +31,9 @@ function loadEmIn(){
   <div class="topnav">
       <a href="logout.php" class="btn btn-danger">Log Out</a><!--logout button-->
       <a class="active" href="#settings">Settings</a>
-      <a href="#frinds">Friends</a>
-      <a href="#profile">Profile</a>
+      <a href="connect4.php">Play Game</a>
+      <a href="friends.php">Friends</a>
+      <a href="profile.php">Profile</a>
       <a href="home.php">Home</a>
 
       <!--shows player name and wins/losses-->
@@ -40,7 +41,6 @@ function loadEmIn(){
    </div>
    <h1 style = "text-align: center">Settings</h1>
 </head>
-
 
 <!--NOTE onload can only be used on certain tags-->
 <body onload = "loadEmIn()" >

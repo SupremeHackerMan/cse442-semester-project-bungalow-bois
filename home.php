@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="css/navigationBar.css">
 <link rel="stylesheet" href="css/leaderboard.css">
 <script type="text/javascript" src="scripts.js"></script>
+
 <script>
 function loadEmIn(){
    getPlayerInfo();
@@ -26,20 +27,21 @@ function loadEmIn(){
 }
 </script>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!--Navigation bar-->
   <div class="topnav">
       <a href="logout.php" class="btn btn-danger">Log Out</a><!--logout button-->
       <a href="settings.php">Settings</a>
-      <a href="#contact">Friends</a>
-      <a href="#about">Profile</a>
+      <a href="connect4.php">Play Game</a>
+      <a href="friends.php">Friends</a>
+      <a href="profile.php">Profile</a>
       <a class="active" href="#home">Home</a>
 
       <!--shows player name and wins/losses-->
       <div class = "playInfo" id = "pInfo" > </div>
    </div>
-   <h1 style = "text-align: center">LeaderBoard</h1>
+   
 </head>
 
 
@@ -49,7 +51,7 @@ function loadEmIn(){
   
 
 </body>
-
+<h1 style = "text-align: center">LeaderBoard</h1>
 <table id="leaderboard">
    <tr>
       <th>Ranking</th>
