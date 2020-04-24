@@ -30,7 +30,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 
                 if(mysqli_stmt_num_rows($stmt) == 1){
                     $username_err = "This username is already taken.";
-                } else{
+                }elseif (strpos($param_username, '<') !== false) {
+                    $username_err = "No \"<\" please.";
+                }else{
                     $username = trim($_POST["username"]);
                 }
             } else{
