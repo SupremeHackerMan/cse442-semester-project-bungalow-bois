@@ -94,7 +94,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
-    <link rel="stylesheet" href="navigationBar.css"><!--navigation bar styling-->
+    <link rel="stylesheet" href="css/navigationBar.css"><!--navigation bar styling-->
     <style type="text/css">
         body{ font: 14px sans-serif; }
         .wrapper{ width: 350px; padding: 20px;margin: 0 auto; }
@@ -103,10 +103,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <body>
     <!--Navigation bar-->
     <div class="topnav">
-    <a class="active" href="#home">Home</a>
-    <a href="#news">News</a>
-    <a href="#contact">Contact</a>
-    <a href="#about">About</a>
+        <a class="active" href="#login">Log In</a>
+        <div class="inactive" >Settings</div>
+        <div class="inactive" >Friends</div>
+        <div class="inactive" >Profile</div>
+        <div class="inactive" >Home</div>
     </div>
     <div class = "bigTitle" >Connect 4</div>
     <div class="wrapper">

@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 include 'config.php';
 session_start();
 $currentUserName = $_SESSION["username"];
-$currentUser = "[logged in as: ";
+$currentUser = "[logged in as ";
 $info = ":(";
 if($_SESSION['loggedin']==true){ 
     $currentUser .= $_SESSION["username"]. "]";
