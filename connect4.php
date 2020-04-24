@@ -7,7 +7,7 @@
    include 'config.php';
    // Check if the user is logged in, if not then redirect him to login page
    if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-      header("location: login.php");
+      header("location: index.php");
       exit;
    }
    //displays your username at the top of page
@@ -260,7 +260,7 @@ function updateBoard() {
                 document.getElementById("cell"+row+col).style.backgroundColor="#FFFFFF";
       } else if (board[row][col]==1) { //1 for yellow
                 document.getElementById("cell"+row+col).style.backgroundColor="#FFFF00";
-      } else if (board[row][col]==2) { //1 for yellow
+      } else if (board[row][col]==2) { //2 for red
                 document.getElementById("cell"+row+col).style.backgroundColor="#FF0000";
        }
     }
