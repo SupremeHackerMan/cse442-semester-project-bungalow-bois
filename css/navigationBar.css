@@ -1,3 +1,4 @@
+/*padding is the area around the text its very useful for setting colored backgrounds*/
 .playInfo{
 float: left;
 color: #f2f2f2;
@@ -57,14 +58,24 @@ font-size: 17px;
 opacity: .15;
 }
 
+
 .settingsMenu{
   text-align: center;
   font-family: "Helvetica", sans-serif;
   padding: 10px 14px;
+  background-color: #f2f2f2;
+  width: 400px;
+  padding: 10px;
+  margin: 0 auto;
 }
 .settingsMenu a{
+  color: #545454;
   text-align: center;
   font-family: "Helvetica", sans-serif;
   text-decoration: none;
-  padding: 10px 14px;
+  padding: 4px 7px;
+}
+.settingsMenu a:hover {
+background-color: #0077EE;
+color: white;
 }
