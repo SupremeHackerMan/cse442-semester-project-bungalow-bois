@@ -32,6 +32,11 @@
 ?>
  
 <!DOCTYPE html>
+
+
+<link rel="stylesheet" href="css/gameBoard.css">
+<link rel="stylesheet" href="css/navigationBar.css">
+<script type="text/javascript" src="scripts.js"></script>
 <html>
 
 <a href="logout.php" class="btn btn-danger">Log Out</a><!--logout button-->

@@ -36,3 +36,30 @@ function getRankings() {
    xmlhttp.send();
 
 }
+
+//loads the board from the table on tethys. Its stored there as 6 strings, each one corresponds to a row
+function loadBoard(board, chainSize) {
+   
+   //localStorage.setItem('init',JSON.stringify("done"));//initializes it only once
+   //if(JSON.parse(localStorage.getItem('init')))
+
+   board = JSON.parse(localStorage.getItem('boardo'+chainSize));
+   turn = parseInt(JSON.parse(localStorage.getItem('turno'+chainSize)));
+   if(turn == 1){
+      document.getElementById("colorTurn").innerHTML="Yellow Turn (YOU)";
+   }else{
+      document.getElementById("colorTurn").innerHTML="Red Turn";
+   }
+   
+   console.log("loaded turn: "+turn);
+   console.log(board);
+   updateBoard();
+}
+
+function saveBoard(board, chainSize){
+   localStorage.setItem('boardo'+chainSize,JSON.stringify(board));
+   localStorage.setItem('turno'+chainSize,JSON.stringify(turn));
+
+   console.log("saved turn: "+JSON.stringify(turn));
+   console.log(JSON.stringify(board));
+}
