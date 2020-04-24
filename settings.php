@@ -22,7 +22,7 @@
 <script>
 function loadEmIn(){
    getPlayerInfo();
-   getRankings();
+  
 }
 </script>
 <head>
@@ -44,8 +44,22 @@ function loadEmIn(){
 
 <!--NOTE onload can only be used on certain tags-->
 <body onload = "loadEmIn()" >
-
-
+   <div class = "settingsMenu">
+      <p>Local Play<br/>
+         <a href = "connect4.php">Connect 4</a><br/>
+         <a href = "connect5.php">Connect 5</a><br/>
+         <a href = "connect6.php">Connect 6</a><br/>
+         <a href = "connect8.php">Connect 8</a><br/><br/>
+      
+         vs CPU<br/>
+         <a href = "playvsbot.php">Easy</a><br/>
+         <a href = "playvsbot.php">Medium</a><br/>
+         <a href = "playvsbot.php">Hard</a><br/><br/>
+   
+         Multiplayer<br/>
+         <a href = "createOnlineGame.php">Play</a>
+      </p>
+   </div>
   
 
 </body>
