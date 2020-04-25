@@ -21,7 +21,7 @@
 
 <script>
 function loadEmIn(){
-   //loadBoard();//loads board data that was saved in local storage
+   loadBoard();//loads board data that was saved in local storage
    getPlayerInfo();//retrives current players rankings and displays it top left
 }
 </script>
@@ -131,7 +131,12 @@ function loadEmIn(){
 
 <!--*************************************JAVASCRIPT***********Start**********************************************-->
 <script>
-//ray
+//colors of pieces
+var p1Color = "Yellow";
+var p2Color = "Red";
+var p1Colorhex = "#FFFF00";
+var p2Colorhex = "#FF0000";
+
 const COLS = 8;
 const ROWS = 7;
 const chainSize = 5// default is 4 consecutive pieces to win
@@ -165,6 +170,34 @@ function newBoard(board){
 }
 newBoard(board);
 
+//loads the board from the table on tethys. Its stored there as 6 strings, each one corresponds to a row
+function loadBoard() {
+   
+   //localStorage.setItem('init',JSON.stringify("done"));//initializes it only once
+   //if(JSON.parse(localStorage.getItem('init')))
+   board = JSON.parse(localStorage.getItem('boardo'+chainSize));
+   turn = parseInt(JSON.parse(localStorage.getItem('turno'+chainSize)));
+   if()
+
+
+   if(turn == 1){
+      document.getElementById("colorTurn").innerHTML="Yellow Turn (YOU)";
+   }else{
+      document.getElementById("colorTurn").innerHTML="Red Turn";
+   }
+   
+   console.log("loaded turn: "+turn);
+   console.log(board);
+   updateBoard();
+}
+
+function saveBoard(){
+   localStorage.setItem('boardo'+chainSize,JSON.stringify(board));
+   localStorage.setItem('turno'+chainSize,JSON.stringify(turn));
+
+   console.log("saved turn: "+JSON.stringify(turn));
+   console.log(JSON.stringify(board));
+}
 
 
 //this add a game piece to a column and does some other stuff
@@ -183,7 +216,7 @@ function selectColumn(col) {
             }
          }
          turn=2;//go to next players turn (red)
-         document.getElementById("colorTurn").innerHTML="Red Turn";//changes the on top of board to display red players turn
+         document.getElementById("colorTurn").innerHTML= p2Color + " Turn";//changes the on top of board to display red players turn
          
       } else {
          var row = board.length - 1;
@@ -197,14 +230,15 @@ function selectColumn(col) {
             }
          }
          turn=1;
-         document.getElementById("colorTurn").innerHTML="Yellow Turn";//changes the on top of board to display yellow players turn 
+         document.getElementById("colorTurn").innerHTML= p1Color + " Turn";//changes the on top of board to display yellow players turn 
       }
+      saveBoard()
       updateBoard();//updates the display for the board
 
       
       //checks if player1/yellow won
       if(determineWin(board) == 1){
-         document.getElementById("colorTurn").innerHTML="Yellow/You Win!";
+         document.getElementById("colorTurn").innerHTML= p1Color + "/You Win!";
          win = true;
          <?php
             $sql = "UPDATE users SET wins = wins + 1 WHERE  username = '$currentUserName' ";//updates your win (increments it by 1)
@@ -214,7 +248,7 @@ function selectColumn(col) {
          ?>
       //checks if player2/red won   
       }if(determineWin(board) == 2){
-         document.getElementById("colorTurn").innerHTML="Red Wins!";
+         document.getElementById("colorTurn").innerHTML= p2Color + " Wins!";
          win = true;
          <?php
             $sql2 = "INSERT INTO `MatchHistory` (player1, player2, win) VALUES ('$currentUserName', 'Player 2', 0)";//you lost lol
@@ -231,10 +265,10 @@ function updateBoard() {
     for (var col = 0; col < COLS; col++) {
       if (board[row][col]==0) { 
                 document.getElementById("cell"+row+"-"+col).style.backgroundColor="#FFFFFF";
-      } else if (board[row][col]==1) { //1 for yellow
-                document.getElementById("cell"+row+"-"+col).style.backgroundColor="#FFFF00";
-      } else if (board[row][col]==2) { //1 for yellow
-                document.getElementById("cell"+row+"-"+col).style.backgroundColor="#FF0000";
+      } else if (board[row][col]==1) { //1 for player1
+                document.getElementById("cell"+row+"-"+col).style.backgroundColor=p1Colorhex;
+      } else if (board[row][col]==2) { //2 for player2
+                document.getElementById("cell"+row+"-"+col).style.backgroundColor=p2Colorhex;
        }
     }
   }  
@@ -362,14 +396,13 @@ function clearBoard() {
    }
    win = false;// nobody won
    turn = 1;// current turn is now player 1
-   document.getElementById("colorTurn").innerHTML="Yellow/your Turn";//changes the on top of board to display yellow players turn 
+   document.getElementById("colorTurn").innerHTML=p1Color+ "/your Turn";//changes the on top of board to display yellow players turn 
    updateBoard();
 
 }
 
 
 </script>
-<!--*************************************JAVASCRIPT***********END**********************************************-->
 
 </body>
 </html>
