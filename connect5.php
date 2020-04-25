@@ -1,9 +1,9 @@
 <?php
    ini_set('display_errors', 1); 
    error_reporting(E_ALL);
+   include 'config.php';
    // Initialize the session
    session_start();
-   include 'config.php';
    // Check if the user is logged in, if not then redirect him to login page
    if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
       header("location: login.php");
@@ -168,35 +168,31 @@ function newBoard(board){
       }
    }
 }
-newBoard(board);
 
-//loads the board from the table on tethys. Its stored there as 6 strings, each one corresponds to a row
+//loads the board from local storage
 function loadBoard() {
-   
    //localStorage.setItem('init',JSON.stringify("done"));//initializes it only once
    //if(JSON.parse(localStorage.getItem('init')))
-   board = JSON.parse(localStorage.getItem('boardo'+chainSize));
-   turn = parseInt(JSON.parse(localStorage.getItem('turno'+chainSize)));
-   if()
-
-
-   if(turn == 1){
-      document.getElementById("colorTurn").innerHTML="Yellow Turn (YOU)";
-   }else{
-      document.getElementById("colorTurn").innerHTML="Red Turn";
+   if(localStorage.getItem('boardo'+chainSize)){//checks if save exists or not
+      board = JSON.parse(localStorage.getItem('boardo'+chainSize));
+      turn = parseInt(JSON.parse(localStorage.getItem('turno'+chainSize)));
+      document.getElementById("colorTurn").innerHTML= turn==1? p1Color+" Turn (YOU)":p2Color+" Turn";
+   }else{//if not start a new game
+      newBoard(board);
+      saveBoard();
    }
-   
    console.log("loaded turn: "+turn);
    console.log(board);
    updateBoard();
 }
-
 function saveBoard(){
-   localStorage.setItem('boardo'+chainSize,JSON.stringify(board));
-   localStorage.setItem('turno'+chainSize,JSON.stringify(turn));
+   if(!win){
+      localStorage.setItem('boardo'+chainSize,JSON.stringify(board));
+      localStorage.setItem('turno'+chainSize,JSON.stringify(turn));
 
-   console.log("saved turn: "+JSON.stringify(turn));
-   console.log(JSON.stringify(board));
+      console.log("saved turn: "+JSON.stringify(turn));
+      console.log(JSON.stringify(board));
+   }
 }
 
 
@@ -232,10 +228,6 @@ function selectColumn(col) {
          turn=1;
          document.getElementById("colorTurn").innerHTML= p1Color + " Turn";//changes the on top of board to display yellow players turn 
       }
-      saveBoard()
-      updateBoard();//updates the display for the board
-
-      
       //checks if player1/yellow won
       if(determineWin(board) == 1){
          document.getElementById("colorTurn").innerHTML= p1Color + "/You Win!";
@@ -255,6 +247,8 @@ function selectColumn(col) {
             $link->query($sql2);
          ?>
       }
+      saveBoard();
+      updateBoard();//updates the display for the board
    }
    
 }
@@ -381,6 +375,7 @@ function undoMove() {
       var top = moveHistory[moveHistory.length -1];//gets the "top" of the stack
       board[top[0]][top[1]] = 0; //removes that piece from the board
       moveHistory.pop();//pops the top
+      saveBoard();
       updateBoard();//updates the display
     
    }
@@ -397,8 +392,8 @@ function clearBoard() {
    win = false;// nobody won
    turn = 1;// current turn is now player 1
    document.getElementById("colorTurn").innerHTML=p1Color+ "/your Turn";//changes the on top of board to display yellow players turn 
+   saveBoard();
    updateBoard();
-
 }
 
 

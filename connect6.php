@@ -1,4 +1,7 @@
 <?php
+   ini_set('display_errors', 1); 
+   error_reporting(E_ALL);
+   include 'config.php';
    // Initialize the session
    session_start();
    // Check if the user is logged in, if not then redirect him to login page
@@ -6,47 +9,42 @@
       header("location: login.php");
       exit;
    }
-   //displays your username at the top of page
-   if($_SESSION['loggedin']==true){ 
-         echo "Logged in as ". $_SESSION["username"];
-   }
    $currentUserName = $_SESSION["username"];
-   $HOST = 'tethys.cse.buffalo.edu';
-   $USERNAME = 'jling2';
-   $USERPASSWORD = "50244515";
-   $DBNAME = "cse442_542_2020_spring_teaml_db";
-
-   $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-
-   $sql = "SELECT wins, losses FROM users WHERE username = '$currentUserName' ";
-   $result = $conn->query($sql);
-
-   //displays your game stats i.e. wins and losses
-   if ($result->num_rows > 0) {
-      // output data of each row
-      while (($row = $result->fetch_assoc())) {
-         echo "<br> Current Stats: Wins: ". $row["wins"].  " Losses: ". $row["losses"].  "<br>";
-      } 
-   }
-   
 ?>
  
 <!DOCTYPE html>
 <html>
 
-<a href="logout.php" class="btn btn-danger">Log Out</a><!--logout button-->
+<link rel="stylesheet" href="css/gameBoard.css">
+<link rel="stylesheet" href="css/navigationBar.css">
+<script type="text/javascript" src="scripts.js"></script>
+
+<script>
+function loadEmIn(){
+   loadBoard();//loads board data that was saved in local storage
+   getPlayerInfo();//retrives current players rankings and displays it top left
+}
+</script>
 
 <head>
-  
+   <!--Navigation bar-->
+   <div class="topnav">
+      <a href="logout.php" class="btn btn-danger">Log Out</a><!--logout button-->
+      <a href="settings.php">Settings</a>
+      <a class="active" href="#game">Play Game</a>
+      <a href="friends.php">Friends</a>
+      <a href="profile.php">Profile</a>
+      <a href="home.php">Home</a>
+
+      <!--shows player name and wins/losses-->
+      <div class = "playInfo" id = "pInfo" > </div>
+   </div> 
 </head>
 <body>
+<body onload="loadEmIn()">
 
+<H1>Neck 6 - Local Multiplayer Mode</H1>
 
-<H1>Neck 4 - Local Multiplayer Mode</H1>
-
-<!--links to css file-->
-<link rel="stylesheet" href="style.css">
-<!--ray-->
 <div id="colorTurn">Yellow Turn (Thats You)</div>
 <div id="board">
 <div class="row">
@@ -151,13 +149,14 @@
 <input id="resetButton" type="button" value="Undo" onclick="undoMove()" /></br></br><!--button to undo a move-->
 <input id="resetButton" type="button" value="Clear/Start New Game" onclick="clearBoard()" /></br></br><!--resets the board button-->
 
-<p><a href="https://www-student.cse.buffalo.edu/CSE442-542/2020-spring/cse-442l/welcome.php">Play Connect 4</a></p>
-<p><a href="https://www-student.cse.buffalo.edu/CSE442-542/2020-spring/cse-442l/connect5.php">Play Connect 5</a></p>
-<p><a href="https://www-student.cse.buffalo.edu/CSE442-542/2020-spring/cse-442l/connect8.php">Play Connect 8</a></p>
 
 <!--*************************************JAVASCRIPT***********Start**********************************************-->
 <script>
-//ray
+var p1Color = "Yellow";
+var p2Color = "Red";
+var p1Colorhex = "#FFFF00";
+var p2Colorhex = "#FF0000";
+
 const COLS = 9;
 const ROWS = 8;
 const chainSize = 6// default is 4 consecutive pieces to win
@@ -189,63 +188,31 @@ function newBoard(board){
       }
    }
 }
-newBoard(board);
-
-//read the board from the table on tethys. Its stored there as 6 strings each one corresponds to a row
-function readFromDatabase(){
-
+//loads the board from local storage
+function loadBoard() {
+   //localStorage.setItem('init',JSON.stringify("done"));//initializes it only once
+   //if(JSON.parse(localStorage.getItem('init')))
+   if(localStorage.getItem('boardo'+chainSize)){//checks if save exists or not
+      board = JSON.parse(localStorage.getItem('boardo'+chainSize));
+      turn = parseInt(JSON.parse(localStorage.getItem('turno'+chainSize)));
+      document.getElementById("colorTurn").innerHTML= turn==1? p1Color+" Turn (YOU)":p2Color+" Turn";
+   }else{//if not start a new game
+      newBoard(board);
+      saveBoard();
+   }
+   console.log("loaded turn: "+turn);
+   console.log(board);
+   updateBoard();
 }
+function saveBoard(){
+   if(!win){
+      localStorage.setItem('boardo'+chainSize,JSON.stringify(board));
+      localStorage.setItem('turno'+chainSize,JSON.stringify(turn));
 
-//work in progress
-
-// //writes the board onto the database
-// function writetoDatabase(){
-//    //convert each row into strings
-//    var row0 = board[0].join('');
-//    var row1 = board[1].join('');
-//    var row2 = board[2].join('');
-//    var row3 = board[3].join('');
-//    var row4 = board[4].join('');
-//    var row5 = board[5].join('');
-//    var row6 = board[6].join('');
-//    var row7 = board[7].join('');
-
-//    //puts the strings into cookies so the variables can be accessed using php
-//    document.cookie = "row0="+row0;
-//    document.cookie = "row1="+row1;
-//    document.cookie = "row2="+row2;
-//    document.cookie = "row3="+row3;
-//    document.cookie = "row4="+row4;
-//    document.cookie = "row5="+row5;
-//    document.cookie = "row6="+row6;
-//    document.cookie = "row7="+row7;
-
-//    ?php (removed < before ?)
-//       //retrieves the data from the cookies
-//       $row0 = $_COOKIE["row0"];
-//       $row1 = $_COOKIE["row1"];
-//       $row2 = $_COOKIE["row2"];
-//       $row3 = $_COOKIE["row3"];
-//       $row4 = $_COOKIE["row4"];
-//       $row5 = $_COOKIE["row5"];
-//       $row6 = $_COOKIE["row6"];
-//       $row7 = $_COOKIE["row7"];
-
-//       $result = $conn->query("SELECT * FROM `SavedOfflineGames` WHERE `username` = '$currentUserName' ");//checks if players saved game is there or not
-
-//       if ($result->num_rows == 0) {//if not there create a new entry
-//          $sql = "INSERT INTO `SavedOfflineGames` (username, row0, row1, row2, row3, row4, row5, row6, row7) 
-//                                     VALUES ('$currentUserName', '$row0', '$row1','$row2','$row3','$row4','$row5','$row6','$row7')";
-//          $conn->query($sql);   
-//       }else{//if its there it will update the existing one
-//          $sql = "UPDATE `SavedOfflineGames` SET row0 = '$row0', row1 = '$row1', row2 = '$row2', row3 = '$row3', row4 = '$row4', row5 = '$row5', row6 = '$row6', row7 = '$row7' 
-//                                           WHERE username = '$currentUserName'" ;                          
-//          $conn->query($sql);   
-//       }
-//    ? (removed > after ?)
-   
-
-// }
+      console.log("saved turn: "+JSON.stringify(turn));
+      console.log(JSON.stringify(board));
+   }
+}
 
 //this add a game piece to a column and does some other stuff
 function selectColumn(col) {
@@ -278,10 +245,7 @@ function selectColumn(col) {
          }
          turn=1;
          document.getElementById("colorTurn").innerHTML="Yellow Turn";//changes the on top of board to display yellow players turn 
-      }
-      updateBoard();//updates the display for the board
-      //writetoDatabase();//updates the board to the database
-      
+      } 
       //checks if player1/yellow won
       if(determineWin(board) == 1){
          document.getElementById("colorTurn").innerHTML="Yellow/You Win!";
@@ -289,8 +253,8 @@ function selectColumn(col) {
          <?php
             $sql = "UPDATE users SET wins = wins + 1 WHERE  username = '$currentUserName' ";//updates your win (increments it by 1)
             $sql2 = "INSERT INTO `MatchHistory` (player1, player2, win) VALUES ('$currentUserName', 'Player 2', 1)";//updates match history table: 1 means win 0 means lose 
-            $conn->query($sql);
-            $conn->query($sql2);
+            $link->query($sql);
+            $link->query($sql2);
          ?>
       //checks if player2/red won   
       }if(determineWin(board) == 2){
@@ -298,9 +262,12 @@ function selectColumn(col) {
          win = true;
          <?php
             $sql2 = "INSERT INTO `MatchHistory` (player1, player2, win) VALUES ('$currentUserName', 'Player 2', 0)";//you lost lol
-            $conn->query($sql2);
+            $link->query($sql2);
          ?>
       }
+      saveBoard();
+      updateBoard();//updates the display for the board
+
    }
    
 }
@@ -435,12 +402,12 @@ function undoMove() {
       var top = moveHistory[moveHistory.length -1];//gets the "top" of the stack
       board[top[0]][top[1]] = 0; //removes that piece from the board
       moveHistory.pop();//pops the top
+      saveBoard();
       updateBoard();//updates the display
-      //writetoDatabase();//updates the database
+
    }
    
 }
-
 //resets the board
 function clearBoard() {
    //all values back to 0
@@ -451,180 +418,10 @@ function clearBoard() {
    win = false;// nobody won
    turn = 1;// current turn is now player 1
    document.getElementById("colorTurn").innerHTML="Yellow/your Turn";//changes the on top of board to display yellow players turn 
+   saveBoard();
    updateBoard();
-   //writetoDatabase();//updates the database
 }
-
-
 </script>
-<!--*************************************JAVASCRIPT***********END**********************************************-->
 
-
-
-
-<!--Every thing in this p tag: Displays a bunch of stuff like leaderboard and player list-->
-<p>
-   <div id="player_list" class="box">Player List
-      <?php
-         $currentUserName = $_SESSION["username"];//session is a global variable for current username
-         $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-         $sql = "SELECT username FROM users";
-         $result = $conn->query($sql);
-
-         if ($result->num_rows > 0) {
-            // output data of each row
-            while($row = $result->fetch_assoc()) {
-               echo "<br>". $row["username"].  "<br>";
-            }
-         }else {
-            echo "<br> 0 results";
-         }
-         
-      ?>
-   </div>
-
-   <div id="friends_list" class="box">Friends List
-      <?php
-         $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-         $sql = "SELECT * FROM `Friends` WHERE `friend1Username` = '$currentUserName'  OR `friend2Username` = '$currentUserName' ";
-         $result = $conn->query($sql);
-
-         if ($result->num_rows > 0) {
-            // output data of each row
-            while($row = $result->fetch_assoc()) {
-               if ($row["friend1Username"] === $currentUserName){
-                  echo "<br>". $row["friend2Username"].  "<br>";
-               }else{
-                  echo "<br>". $row["friend1Username"].  "<br>";
-               }
-            }
-         } else {
-            echo "<br> 0 results";
-         }
-  
-      ?>
-   </div>
-
-   <div id="leaderboard" class="box">Leaderboard
-      <?php
-         $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-         $sql = "SELECT username, wins, losses FROM users ORDER BY wins DESC";
-         $result = $conn->query($sql);
-         if ($result->num_rows > 0) {
-            // output data of each row
-            $counter = 0;
-            while (($row = $result->fetch_assoc()) AND ($counter < 10)) {
-               echo "<br>". $row["username"]. "<br> Wins: ". $row["wins"].  "   Losses: ". $row["losses"].  "<br>";
-               $counter++;
-            } 
-               
-         }
-      
-
-      ?>
-   </div>
-
-   <div id="match_history" class="box"> Match History
-      <?php
-         $currentUserName = $_SESSION["username"];
-         $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-         $sql = "SELECT * FROM `MatchHistory` WHERE `player1` = '$currentUserName' ";
-         $result = $conn->query($sql);
-         $outcome = "";
-         if ($result->num_rows > 0) {
-            // output data of each row
-            while ($row = $result->fetch_assoc()) {
-               if ($row["win"]  == 1) {
-                  $outcome = "won.";
-               } else {
-                  $outcome = "lost.";
-               }
-               echo "<br>" . $row["player1"]. " played against ". $row["player2"].  " and ". $outcome.  "<br>";
-            }  
-         }
-    
-
-      ?>
-   </div>
-   <div id="notifications" class="box"> Notifications
-      <?php
-         $currentUserName = $_SESSION["username"];
-
-         $conn = new mysqli($HOST, $USERNAME, $USERPASSWORD, $DBNAME);
-
-         //search through FriendRequests table for current username
-         $result = $conn->query("SELECT * FROM `FriendRequests` WHERE `requester` = '$currentUserName' ");//
-         $result2 = $conn->query("SELECT * FROM `FriendRequests` WHERE `requestee` = '$currentUserName' ");//
-
-         $result3 = $conn->query("SELECT * FROM `GameInvites` WHERE `inviter` = '$currentUserName' ");//
-         $result4 = $conn->query("SELECT * FROM `GameInvites` WHERE `invitee` = '$currentUserName' ");//
-
-         /*initialized to be empty
-         $cantFindUserError = "";*/
-
-         if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-               echo "<br>Your friend request to " . $row["requestee"].  " is pending <br>";
-            } 
-         }
-         if($result2->num_rows > 0){
-            while ($row = $result2->fetch_assoc()) {
-               echo "<br>You have a friend request from " . $row["requester"].  "<br>";
-            }   
-         }
-         if($result3->num_rows > 0){
-            while ($row = $result3->fetch_assoc() ) {
-               echo "<br>Your invitation to " . $row["inviter"].  " is pending <br>";
-            } 
-         }
-         if($result4->num_rows > 0){
-            while ($row = $result4->fetch_assoc() ) {
-               echo "<br>You have an invitation from " . $row["invitee"].  "<br>";
-            }          
-         }
-         $conn->close();
-
-      ?>
-   </div>
-
-
-   <h3>Send Friend Request </h3>
-      <form action = "friendsAndInvites\friendRequest.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "user_name">
-         <input type = "submit" value="Send">
-      </form>
-      <!--<span class="help-block"><?php //echo $username_err; ?></span>-->
-   <h3>Invite Friend to Game</h3>
-      <form action = "friendsAndInvites\inviteFriend.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "user_name">
-         <input type = "submit" value="Invite">
-      </form>
-
-   <div>Respond to Friend Request
-   
-      <form action = "friendsAndInvites\acceptFriendRequest.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "user_name">
-         <input type = "submit" value="Accept">
-      </form>
-      <form action = "friendsAndInvites\denyFriendRequest.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "user_name">
-         <input type = "submit" value="Deny">
-      </form>
-   </div>
-   <h3>Respond to Invite</h3>
-      <form action = "friendsAndInvites\acceptInviteFriend.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "user_name">
-         <input type = "submit" value="Accept">
-      </form>
-      <form action = "friendsAndInvites\denyInviteFriend.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "user_name">
-         <input type = "submit" value="Deny">
-      </form>
-         
-</p>
-
-<!-- 
-   UPDATE user SET wins = wins + 1 WHERE username = 'jackie'
-            -->
 </body>
 </html>

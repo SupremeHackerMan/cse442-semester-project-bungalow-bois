@@ -116,6 +116,11 @@ function loadEmIn(){
 
 <!--*************************************JAVASCRIPT***********Start**********************************************-->
 <script>
+//colors of pieces
+var p1Color = "Yellow";
+var p2Color = "Red";
+var p1Colorhex = "#FFFF00";
+var p2Colorhex = "#FF0000";
 
 const COLS = 7;
 const ROWS = 6;
@@ -164,11 +169,11 @@ function newBoard(board){
 function loadBoard() {
    //localStorage.setItem('init',JSON.stringify("done"));//initializes it only once
    //if(JSON.parse(localStorage.getItem('init')))
-   if(localStorage.getItem('boardo')){
-      board = JSON.parse(localStorage.getItem('boardo'));
-      turn = parseInt(JSON.parse(localStorage.getItem('turno')));
-      document.getElementById("colorTurn").innerHTML= turn==1? "Yellow Turn (YOU)":"Red Turn";
-   }else{
+   if(localStorage.getItem('boardo'+chainSize)){//checks if save exists or not
+      board = JSON.parse(localStorage.getItem('boardo'+chainSize));
+      turn = parseInt(JSON.parse(localStorage.getItem('turno'+chainSize)));
+      document.getElementById("colorTurn").innerHTML= turn==1? p1Color+" Turn (YOU)":p2Color+" Turn";
+   }else{//if not start a new game
       newBoard(board);
       saveBoard();
    }
@@ -177,18 +182,14 @@ function loadBoard() {
    updateBoard();
 }
 function saveBoard(){
-   localStorage.setItem('boardo',JSON.stringify(board));
-   localStorage.setItem('turno',JSON.stringify(turn));
-   console.log("saved turn: "+JSON.stringify(turn));
-   console.log(JSON.stringify(board));
+   if(!win){
+      localStorage.setItem('boardo'+chainSize,JSON.stringify(board));
+      localStorage.setItem('turno'+chainSize,JSON.stringify(turn));
+
+      console.log("saved turn: "+JSON.stringify(turn));
+      console.log(JSON.stringify(board));
+   }
 }
-
-
-
-
-
-
-
 
 
 //this add a game piece to a column and does some other stuff
@@ -225,10 +226,6 @@ function selectColumn(col) {
          turn=1;
          document.getElementById("colorTurn").innerHTML="Yellow Turn (YOU)";//changes the on top of board to display yellow players turn 
       }
-      saveBoard();
-      updateBoard();//updates the display for the board
-      
-      
       //checks if player1/yellow won
       if(determineWin(board) == 1){
          document.getElementById("colorTurn").innerHTML="Yellow (YOU) Win!";
@@ -248,6 +245,10 @@ function selectColumn(col) {
             $link->query($sql2);
          ?>
       }
+      saveBoard();
+      updateBoard();//updates the display for the board
+      
+      
    }
    
 }
