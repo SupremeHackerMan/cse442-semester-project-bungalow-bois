@@ -11,7 +11,7 @@
       exit;
    }
    $currentUserName = $_SESSION["username"];
-   
+   $_SESSION["wins"] = 0; 
 ?>
  
 <!DOCTYPE html>
@@ -135,18 +135,6 @@ var win = false;
 var moveHistory = [];
 
 
-//resets the board stored in the database
-function clearDbBoard(){
-   <?php
-    
-   
-      $sql = "UPDATE `SavedOfflineGames` SET row0 = '0000000', row1 = '0000000', row2 = '0000000', row3 = '00000003', row4 = '0000000', row5 = '0000000' 
-                                          WHERE username = '$currentUserName'" ;                          
-      $link->query($sql);   
-   
-   ?>
-}
-
 
 /*
 var board = [
@@ -230,25 +218,17 @@ function selectColumn(col) {
       if(determineWin(board) == 1){
          document.getElementById("colorTurn").innerHTML="Yellow (YOU) Win!";
          win = true;
-         <?php
-            $sql = "UPDATE users SET wins = wins + 1 WHERE  username = '$currentUserName' ";//updates your win (increments it by 1)
-            $sql2 = "INSERT INTO `MatchHistory` (player1, player2, win) VALUES ('$currentUserName', 'Player 2', 1)";//updates match history table: 1 means win 0 means lose 
-            $link->query($sql);
-            $link->query($sql2);
-         ?>
+         winHandler("1");
       //checks if player2/red won   
       }if(determineWin(board) == 2){
          document.getElementById("colorTurn").innerHTML="Red Wins!";
          win = true;
-         <?php
-            $sql2 = "INSERT INTO `MatchHistory` (player1, player2, win) VALUES ('$currentUserName', 'Player 2', 0)";//you lost lol
-            $link->query($sql2);
-         ?>
+         winHandler("2");
       }
+      getPlayerInfo();
       saveBoard();
       updateBoard();//updates the display for the board
-      
-      
+   
    }
    
 }

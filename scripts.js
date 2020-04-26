@@ -35,5 +35,31 @@ function getRankings() {
    xmlhttp.open("GET", "getRankings.php", true);
    xmlhttp.send();
 
+}/*
+function winHandler(winningplayer) {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         
+         console.log(this.responseText);
+         
+      }
+   };
+   xmlhttp.open("GET", "winHandler.php?d="+winningplayer, true);
+   xmlhttp.send();
+
+}*/ 
+
+function winHandler(winningplayer) {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         console.log("player "+ this.responseText+ "has won");
+         
+      }
+   };
+   xmlhttp.open("GET", "winHandler.php?d="+winningplayer, true);
+   xmlhttp.send();
+
 }
 
