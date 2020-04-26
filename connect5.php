@@ -232,21 +232,14 @@ function selectColumn(col) {
       if(determineWin(board) == 1){
          document.getElementById("colorTurn").innerHTML= p1Color + "/You Win!";
          win = true;
-         <?php
-            $sql = "UPDATE users SET wins = wins + 1 WHERE  username = '$currentUserName' ";//updates your win (increments it by 1)
-            $sql2 = "INSERT INTO `MatchHistory` (player1, player2, win) VALUES ('$currentUserName', 'Player 2', 1)";//updates match history table: 1 means win 0 means lose 
-            $link->query($sql);
-            $link->query($sql2);
-         ?>
+         winHandler("1");//updates the database on the win
       //checks if player2/red won   
       }if(determineWin(board) == 2){
          document.getElementById("colorTurn").innerHTML= p2Color + " Wins!";
          win = true;
-         <?php
-            $sql2 = "INSERT INTO `MatchHistory` (player1, player2, win) VALUES ('$currentUserName', 'Player 2', 0)";//you lost lol
-            $link->query($sql2);
-         ?>
+         winHandler("2");
       }
+      getPlayerInfo();
       saveBoard();
       updateBoard();//updates the display for the board
    }

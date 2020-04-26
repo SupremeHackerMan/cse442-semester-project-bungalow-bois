@@ -218,7 +218,7 @@ function selectColumn(col) {
       if(determineWin(board) == 1){
          document.getElementById("colorTurn").innerHTML="Yellow (YOU) Win!";
          win = true;
-         winHandler("1");
+         winHandler("1");//updates the database on the win
       //checks if player2/red won   
       }if(determineWin(board) == 2){
          document.getElementById("colorTurn").innerHTML="Red Wins!";
