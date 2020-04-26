@@ -47,7 +47,7 @@ function loadEmIn(){
 
 <!--ray-->
 <div id="colorTurn">Yellow Turn (Thats You)</div>
-<div id="board">
+<div id="board5">
 <div class="row">
   <div class="cell" id="cell0-0" onclick="selectColumn(0)"></div>
   <div class="cell" id="cell0-1" onclick="selectColumn(1)"></div>
