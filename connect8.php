@@ -236,9 +236,8 @@ var board = [];
 var turn = 1; //1 for Yellow, 2 for Red
 var win = false;
 
-//saves all moves into a "stack"    -   this is for the undo button
-//ex. if p1 makes a move at positions board[1][2] then [1,2] will be pushed to the stack
-var moveHistory = [];
+//saves the index position of previos move   -1,-1 means there is no move saved
+var prevMove = [-1,-1];
 
 /*
 INITIALIZE A NEW BOARD
@@ -265,8 +264,7 @@ function loadBoard() {
    //if(JSON.parse(localStorage.getItem('init')))
    if(localStorage.getItem('boardo'+chainSize)){//checks if save exists or not
       board = JSON.parse(localStorage.getItem('boardo'+chainSize));
-      turn = parseInt(JSON.parse(localStorage.getItem('turno'+chainSize)));
-      document.getElementById("colorTurn").innerHTML= turn==1? p1Color+" Turn (YOU)":p2Color+" Turn";
+      nextTurn(parseInt(JSON.parse(localStorage.getItem('turno'+chainSize))));
    }else{//if not start a new game
       newBoard(board);
       saveBoard();
@@ -300,8 +298,7 @@ function selectColumn(col) {
                break;
             }
          }
-         turn=2;//go to next players turn (red)
-         document.getElementById("colorTurn").innerHTML="Red Turn";//changes the on top of board to display red players turn
+         nextTurn(2);
          
       } else {
          var row = board.length - 1;
@@ -314,8 +311,7 @@ function selectColumn(col) {
                break;
             }
          }
-         turn=1;
-         document.getElementById("colorTurn").innerHTML="Yellow Turn";//changes the on top of board to display yellow players turn 
+         nextTurn(1);
       }
       
       //checks if player1/yellow won
@@ -472,20 +468,26 @@ function determineWin(matrix){
 }
  
 
-//pushes a move into the move history stack
+//adds a move into the move history 
 function pushToMoveHistory(row,col){
-   moveHistory.push([row,col]);
+   prevMove[0]=row;
+   prevMove[1]=col;
 }
 //removes the last piece that was placed
 function undoMove() {
-   if(!win){//undo only works when nobody has won
-      var top = moveHistory[moveHistory.length -1];//gets the "top" of the stack
-      board[top[0]][top[1]] = 0; //removes that piece from the board
-      moveHistory.pop();//pops the top
+   if(!win && prevMove[0] != -1){//undo only works when nobody has won and previous move is not empty (-1 means its empty)
+      
+      board[prevMove[0]][prevMove[1]] = 0; //removes that piece from the board
       saveBoard();
+      prevMove = [-1,-1];//resets previous move
+      nextTurn(turn == 1? 2:1);
       updateBoard();//updates the display
-     
    }
+}
+//sets the turn and updates the display accordingly
+function nextTurn(pturn) {
+   turn = pturn;
+   document.getElementById("colorTurn").innerHTML= turn==1? p1Color+" Turn (YOU)":p2Color+" Turn";
    
 }
 
@@ -497,8 +499,7 @@ function clearBoard() {
          board[x][y] = 0;
    }
    win = false;// nobody won
-   turn = 1;// current turn is now player 1
-   document.getElementById("colorTurn").innerHTML="Yellow/your Turn";//changes the on top of board to display yellow players turn 
+   nextTurn(1); 
    saveBoard();
    updateBoard();
    
