@@ -52,9 +52,9 @@ function loadEmIn(){
          <a href = "connect8.php">Connect 8</a><br/><br/>
       
          vs CPU<br/>
-         <a href = "playvsbot.php">Easy</a><br/>
-         <a href = "playvsbot.php">Medium</a><br/>
-         <a href = "playvsbot.php">Hard</a><br/><br/>
+         <a href = "playvsbotEasy.php">Easy</a><br/>
+         <a href = "playvsbotMedium.php">Medium</a><br/>
+         <a href = "playvsbotHard.php">Hard</a><br/><br/>
    
          Multiplayer<br/>
          <a href = "createOnlineGame.php">Play</a>
