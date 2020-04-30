@@ -11,6 +11,35 @@
       exit;
    }
    $currentUserName = $_SESSION["username"];
+
+
+   $timeywimey = time();
+   echo "current time: ". $timeywimey . "<br>";
+   //$link->query("UPDATE `Status` SET `timestamp`= $timeywimey WHERE `player` = '$currentUserName'");
+
+   $result = $link->query("SELECT `timestamp` FROM `Status` WHERE `player` = '$currentUserName' ");
+   if ($result->num_rows == 1) {
+      
+      while ($row = $result->fetch_assoc()) {
+         echo checkIfOnline($row["timestamp"]);
+         echo $row["timestamp"];
+         
+      }  
+   }
+
+
+
+
+   //checks if the timestamp was created within a minute
+   //if not then the player is offline 
+   function checkIfOnline($timeStuff){
+      if(abs($timeStuff - time()) > 60) {
+         return "<span style='color: red;'>offline</span>";
+         
+      }else{
+         return "<span style='color: green;'>online</span>";
+      }
+   }
    
 ?>
  
@@ -19,8 +48,52 @@
 
 <!--links to css file-->
 <link rel="stylesheet" href="css/navigationBar.css">
-<link rel="stylesheet" href="css/gameBoard.css">
+<link rel="stylesheet" href="css/leaderboard.css">
 <script type="text/javascript" src="scripts.js"></script>
+
+
+<script type="text/javascript">
+//pings the server with current timestamp so we can check if a player is online or not 
+function pingServer() {
+   console.log('pinged!');
+   <?php
+      $timeywimey = time();
+      $link->query("UPDATE `Status` SET `timestamp`= $timeywimey WHERE `player` = '$currentUserName'")
+   ?>
+}
+var interval = setInterval(function () { pingServer(); }, 10*1000);
+
+function loadEmIn() {
+   pingServer();
+   getPlayerInfo();
+}
+
+function funky (yes) {
+   console.log(yes);
+}
+
+function sendFriendRequest(friendId) {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         console.log(this.responseText);
+         
+      }
+   };
+   xmlhttp.open("GET", "sendFriendRequest.php?f="+friendId, true);
+   xmlhttp.send();
+
+}
+function sendFrReq(id) {
+   sendFriendRequest(id);
+}
+
+</script>
+
+
+
+
+
 
 <head>
    <!--Navigation bar-->
@@ -37,51 +110,118 @@
    </div>
 </head>
 <!--loads the board first thing when page refreshes -->
-<body onload="getPlayerInfo()">
+<body onload="loadEmIn()">
+
+
+
+<h1 style = "text-align: center">Friends</h1>
+<table id="leaderboard" >
+   <!--“Uncaught SyntaxError: Unexpected end of input” with onclick CAUSED BY THE QUOTES BEING WRONG WATCH YO QUOTES-->
+   <?php
+      $result = $link->query("SELECT * FROM `Friends` WHERE `friend1Username` = '$currentUserName'  OR `friend2Username` = '$currentUserName' ");
+      if ($result->num_rows > 0) {
+         while($row = $result->fetch_assoc()) {
+            $frienddd = ($row["friend1Username"] === $currentUserName? $row["friend2Username"]:$row["friend1Username"]);
+            $friendTimestamp = 0;
+            $friendId = 0;
+            //grabs the timestamp and id info about the friend
+            $friendInfo = $link->query("SELECT `id`, `timestamp` FROM `Status` WHERE `player` = '$frienddd'");
+            if ($friendInfo->num_rows == 1) {
+               while($row = $friendInfo->fetch_assoc()) {
+                  $friendTimestamp = $row["timestamp"];
+                  $friendId = $row["id"];
+                 
+               }
+            }
+            $funko = "funky(". "$friendId" . ")";
+            echo "<tr>".  
+                     "<td>". $frienddd.  "</td>" . 
+                     "<td>". checkIfOnline($friendTimestamp) .  "</td>" . 
+                     "<td>". "<button onclick = \" " .$funko. "\">Invite To Game</button> </td>" .
+                  "</tr>";        
+         }
+      }else {
+         echo "<tr>".  
+                  "<td>You Have No Friends :(</td>" . 
+                  "<td></td>" . 
+                  "<td></td>" .
+               "</tr>";  
+      }
+   ?>
+</table>
+
+
+
+<h1 style = "text-align: center">All Registered Players</h1>
+<table id="leaderboard" >
+   <!--“Uncaught SyntaxError: Unexpected end of input” with onclick CAUSED BY THE QUOTES BEING WRONG WATCH YO QUOTES-->
+   <?php
+      //$result = $link->query("SELECT * FROM `Status` WHERE `player` != '$currentUserName' ");
+      $result = $link->query("SELECT * FROM `Status` ");
+      if ($result->num_rows > 0) {
+         while($row = $result->fetch_assoc()) {
+            $friendo = $row["player"];
+            $plid = $row["id"];
+            $funky = "sendFrReq(". "$plid" . ")";
+            //SELECT * FROM `Friends` WHERE ((`friend1Username` = 'mayflower' AND  `Friend2Username` = 'raygay' ) OR (`friend1Username` = 'raygay' AND  `Friend2Username` = 'mayflower' ))
+            
+            //checks if already friends so it can disable add friend button
+            $alreadyFriends = $link->query("SELECT * FROM `Friends` WHERE ( (`friend1Username` = '$currentUserName' AND  `Friend2Username` = '$friendo' ) 
+                                                                        OR  (`friend1Username` = '$friendo' AND  `Friend2Username` = '$currentUserName' ))");
+           
+            $yay =($alreadyFriends->num_rows) != 0;
+
+            if($currentUserName === $row["player"] || $yay){
+               echo "<tr>".  
+                     "<td>". $row["player"].  "</td>" . 
+                     "<td>". checkIfOnline($row["timestamp"]) .  "</td>" . 
+                     "<td></td>" .
+                  "</tr>";   
+            }else{
+               echo "<tr>".  
+                        "<td>". $row["player"].  "</td>" . 
+                        "<td>". checkIfOnline($row["timestamp"]) .  "</td>" . 
+                        "<td>". "<button onclick = \" " .$funky. "\">add friend</button> </td>" .
+                     "</tr>";    
+            }    
+         }
+      }else {
+         echo "<tr>".  
+                  "<td>There are no players</td>" . 
+                  "<td></td>" . 
+                  "<td></td>" .
+               "</tr>";  
+      }
+   ?>
+</table>
+
+
+
+
 
 
 
 <p>
-   <div id="player_list" class="box">Player List
-      <?php
-         $currentUserName = $_SESSION["username"];//session is a global variable for current username
-
-         $sql = "SELECT username FROM users";
-         $result = $link->query($sql);
-
-         if ($result->num_rows > 0) {
-            // output data of each row
-            while($row = $result->fetch_assoc()) {
-               echo "<br>". $row["username"].  "<br>";
-            }
-         }else {
-            echo "<br> 0 results";
-         }
-         
-      ?>
-   </div>
+   
 
    <div id="friends_list" class="box">Friends List
       <?php
-   
-         $sql = "SELECT * FROM `Friends` WHERE `friend1Username` = '$currentUserName'  OR `friend2Username` = '$currentUserName' ";
-         $result = $link->query($sql);
+         $result = $link->query("SELECT * FROM `Friends` WHERE `friend1Username` = '$currentUserName'  OR `friend2Username` = '$currentUserName' ");
 
          if ($result->num_rows > 0) {
             // output data of each row
             while($row = $result->fetch_assoc()) {
-               if ($row["friend1Username"] === $currentUserName){
-                  echo "<br>". $row["friend2Username"].  "<br>";
-               }else{
-                  echo "<br>". $row["friend1Username"].  "<br>";
-               }
+               $frienddd = ($row["friend1Username"] === $currentUserName? $row["friend2Username"]:$row["friend1Username"]);
+            
+               echo $frienddd;
             }
          } else {
-            echo "<br> 0 results";
+            echo "<tr> You Have No Friends:( </tr>";
          }
   
       ?>
    </div>
+
 
    <div id="match_history" class="box"> Match History
       <?php

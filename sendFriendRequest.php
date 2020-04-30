@@ -1,16 +1,22 @@
 <?php
-
-
     ini_set('display_errors', 1); 
     error_reporting(E_ALL);
     include 'config.php';
     session_start();
 
-
     //varable should match in the corresponding form where       name =
-    $friendo = $_POST['user_name'];
+    $f= $_REQUEST["f"];
+    $friendId = (int)($f);
     $currentUserName = $_SESSION["username"];
 
+
+    $friendo = "oh no";
+    $friendInfoQ = $link->query("SELECT `player` FROM `Status` WHERE `id` = '$friendId'");
+    if ($friendInfoQ->num_rows == 1) {
+        while($row = $friendInfoQ->fetch_assoc()) {
+            $friendo = $row["player"];
+        }
+    }
 
 
     /*
@@ -41,8 +47,7 @@
         $link->query($sqlQuery2);                               
     }
     
-
- 
-    //return back to welcome.php 
-    header("location: ../welcome.php");
+    
+    echo "sent request to: " . $friendo;
+    
 ?>
