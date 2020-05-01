@@ -14,7 +14,7 @@ if ($result->num_rows > 0) {
         if($row["losses"] != 0){
             $ratio = $row["wins"]/$row["losses"];
         }else {
-            $ratio = -1;
+            $ratio = 0;
         }
         $all .=  "\"" . $row["username"]. "\", \"". $row["wins"].  "\", \"". $row["losses"] . "\", \"". $ratio. "\"" ;
         if($counter != 10){

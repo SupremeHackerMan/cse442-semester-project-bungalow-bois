@@ -26,6 +26,19 @@
 function loadEmIn(){
    loadBoard();//loads board data that was saved in local storage
    getPlayerInfo();//retrives current players rankings and displays it top left
+   pingServer();
+   var interval = setInterval(function () { pingServer(); }, 15*1000);
+}
+function pingServer() {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         console.log(this.responseText);
+         
+      }
+   };
+   xmlhttp.open("GET", "pingServer.php", true);
+   xmlhttp.send();
 }
 </script>
 
@@ -174,6 +187,14 @@ function saveBoard(){
 
       console.log("saved turn: "+JSON.stringify(turn));
       console.log(JSON.stringify(board));
+   }else if(win){
+      ford = [];
+      newBoard(ford);
+      localStorage.setItem('boardo'+chainSize,JSON.stringify(ford));
+      localStorage.setItem('turno'+chainSize,JSON.stringify(1));
+
+      console.log("saved turn: "+JSON.stringify(turn));
+      console.log(JSON.stringify(ford));
    }
 }
 
@@ -353,7 +374,7 @@ function nextTurn(pturn) {
 }
 
 
-//resets the board
+//resets the board and the display
 function clearBoard() {
    //all values back to 0
    for(x = 0; x < ROWS; x++){
@@ -364,8 +385,8 @@ function clearBoard() {
    nextTurn(1);//sets the turn back to player 1
    saveBoard();
    updateBoard();
-
 }
+
 
 
 </script>

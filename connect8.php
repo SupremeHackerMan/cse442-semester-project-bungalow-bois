@@ -24,6 +24,18 @@
 function loadEmIn(){
    loadBoard();//loads board data that was saved in local storage
    getPlayerInfo();//retrives current players rankings and displays it top left
+   var interval = setInterval(function () { pingServer(); }, 15*1000);
+}
+function pingServer() {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         console.log(this.responseText);
+         
+      }
+   };
+   xmlhttp.open("GET", "pingServer.php", true);
+   xmlhttp.send();
 }
 </script>
 

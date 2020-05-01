@@ -1,10 +1,15 @@
 <?php
+ini_set('display_errors', 1); 
+error_reporting(E_ALL);
 // Include config file
 require_once "config.php";
  
 // Define variables and initialize with empty values
 $username = $password = $confirm_password = "";
 $username_err = $password_err = $confirm_password_err = "";
+
+$color1 = "#FFFF00";
+$color2 = "#FF0000";
  
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -70,7 +75,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         
         // Prepare an insert statement
         $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
-         
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
@@ -81,6 +85,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
+                $link->query("UPDATE users SET color1='$color1', color2='$color2' WHERE username = '$username'");
+                $timeywimey = time();
+                $link->query("INSERT INTO `Status` (`player`, `timestamp`) VALUES ('$username', $timeywimey)");
                 // Redirect to login page
                 header("location: index.php");
             } else{
