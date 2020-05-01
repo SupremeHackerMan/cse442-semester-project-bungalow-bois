@@ -15,6 +15,8 @@ function getPlayerInfo() {
     xmlhttp.send();
  
 }
+
+
 function getRankings() {
    var xmlhttp = new XMLHttpRequest();
    xmlhttp.onreadystatechange = function() {
@@ -62,4 +64,6 @@ function winHandler(winningplayer) {
    xmlhttp.send();
 
 }
+
+
 

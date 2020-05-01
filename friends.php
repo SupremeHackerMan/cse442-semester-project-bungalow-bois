@@ -12,10 +12,9 @@
    }
    $currentUserName = $_SESSION["username"];
 
-
+   /*
    $timeywimey = time();
    echo "current time: ". $timeywimey . "<br>";
-   //$link->query("UPDATE `Status` SET `timestamp`= $timeywimey WHERE `player` = '$currentUserName'");
 
    $result = $link->query("SELECT `timestamp` FROM `Status` WHERE `player` = '$currentUserName' ");
    if ($result->num_rows == 1) {
@@ -26,7 +25,7 @@
          
       }  
    }
-
+*/
 
 
 
@@ -53,25 +52,30 @@
 
 
 <script type="text/javascript">
+
+
 //pings the server with current timestamp so we can check if a player is online or not 
-function pingServer() {
-   console.log('pinged!');
-   <?php
-      $timeywimey = time();
-      $link->query("UPDATE `Status` SET `timestamp`= $timeywimey WHERE `player` = '$currentUserName'")
-   ?>
-}
-var interval = setInterval(function () { pingServer(); }, 10*1000);
+
+
 
 function loadEmIn() {
    pingServer();
+   var interval = setInterval(function () { pingServer(); }, 10*1000);
    getPlayerInfo();
 }
+//pings the server with current timestamp so we can check if a player is online or not
+function pingServer() {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         console.log(this.responseText);
+         
+      }
+   };
+   xmlhttp.open("GET", "pingServer.php", true);
+   xmlhttp.send();
 
-function funky (yes) {
-   console.log(yes);
 }
-
 function sendFriendRequest(friendId) {
    var xmlhttp = new XMLHttpRequest();
    xmlhttp.onreadystatechange = function() {
@@ -88,6 +92,9 @@ function sendFrReq(id) {
    sendFriendRequest(id);
 }
 
+function funky (yes) {
+   console.log(yes);
+}
 </script>
 
 
@@ -162,28 +169,30 @@ function sendFrReq(id) {
          while($row = $result->fetch_assoc()) {
             $friendo = $row["player"];
             $plid = $row["id"];
-            $funky = "sendFrReq(". "$plid" . ")";
+            $funky = "sendFriendRequest(". "$plid" . ")";
             //SELECT * FROM `Friends` WHERE ((`friend1Username` = 'mayflower' AND  `Friend2Username` = 'raygay' ) OR (`friend1Username` = 'raygay' AND  `Friend2Username` = 'mayflower' ))
             
             //checks if already friends so it can disable add friend button
             $alreadyFriends = $link->query("SELECT * FROM `Friends` WHERE ( (`friend1Username` = '$currentUserName' AND  `Friend2Username` = '$friendo' ) 
                                                                         OR  (`friend1Username` = '$friendo' AND  `Friend2Username` = '$currentUserName' ))");
-           
-            $yay =($alreadyFriends->num_rows) != 0;
-
-            if($currentUserName === $row["player"] || $yay){
-               echo "<tr>".  
-                     "<td>". $row["player"].  "</td>" . 
-                     "<td>". checkIfOnline($row["timestamp"]) .  "</td>" . 
-                     "<td></td>" .
-                  "</tr>";   
+            $friendshipCheck =($alreadyFriends->num_rows) != 0;
+            //checks if a friend invite has already been sent
+            $alreadySent = $link->query("SELECT * FROM `FriendRequests` WHERE ( (`requester` = '$currentUserName' AND  `requestee` = '$friendo' )
+                                                                              OR (`requester` = '$friendo' AND  `requestee` = '$currentUserName' ))");
+            $sentCheck =($alreadySent->num_rows) != 0;
+            echo "<tr>".  
+                     "<td>". $row["player"].  "</td>" .
+                     "<td>". checkIfOnline($row["timestamp"]) .  "</td>";
+            if($currentUserName === $row["player"]){
+               echo  "<td>You</td>" ;
+            }elseif($friendshipCheck){
+               echo  "<td>Friends</td>" ;
+            }elseif($sentCheck){
+               echo  "<td>Request Pending</td>" ;
             }else{
-               echo "<tr>".  
-                        "<td>". $row["player"].  "</td>" . 
-                        "<td>". checkIfOnline($row["timestamp"]) .  "</td>" . 
-                        "<td>". "<button onclick = \" " .$funky. "\">add friend</button> </td>" .
-                     "</tr>";    
-            }    
+               echo "<td>". "<button onclick = \" " .$funky. "\">add friend</button> </td>";
+            }
+            echo "</tr>";   
          }
       }else {
          echo "<tr>".  
@@ -203,26 +212,6 @@ function sendFrReq(id) {
 
 <p>
    
-
-   <div id="friends_list" class="box">Friends List
-      <?php
-         $result = $link->query("SELECT * FROM `Friends` WHERE `friend1Username` = '$currentUserName'  OR `friend2Username` = '$currentUserName' ");
-
-         if ($result->num_rows > 0) {
-            // output data of each row
-            while($row = $result->fetch_assoc()) {
-               $frienddd = ($row["friend1Username"] === $currentUserName? $row["friend2Username"]:$row["friend1Username"]);
-            
-               echo $frienddd;
-            }
-         } else {
-            echo "<tr> You Have No Friends:( </tr>";
-         }
-  
-      ?>
-   </div>
-
-
    <div id="match_history" class="box"> Match History
       <?php
          $currentUserName = $_SESSION["username"];
