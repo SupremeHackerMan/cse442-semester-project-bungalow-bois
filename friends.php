@@ -29,10 +29,10 @@
 
 
 
-   //checks if the timestamp was created within a minute
+   //checks if the timestamp was created within 45 secs
    //if not then the player is offline 
    function checkIfOnline($timeStuff){
-      if(abs($timeStuff - time()) > 60) {
+      if(abs($timeStuff - time()) > 45) {
          return "<span style='color: red;'>offline</span>";
          
       }else{
@@ -53,14 +53,9 @@
 
 <script type="text/javascript">
 
-
-//pings the server with current timestamp so we can check if a player is online or not 
-
-
-
 function loadEmIn() {
    pingServer();
-   var interval = setInterval(function () { pingServer(); }, 10*1000);
+   var interval = setInterval(function () { pingServer(); }, 15*1000);
    getPlayerInfo();
 }
 //pings the server with current timestamp so we can check if a player is online or not
@@ -74,7 +69,6 @@ function pingServer() {
    };
    xmlhttp.open("GET", "pingServer.php", true);
    xmlhttp.send();
-
 }
 function sendFriendRequest(friendId) {
    var xmlhttp = new XMLHttpRequest();
@@ -88,16 +82,32 @@ function sendFriendRequest(friendId) {
    xmlhttp.send();
 
 }
-function sendFrReq(id) {
-   sendFriendRequest(id);
-}
+function acceptFriendRequest(friendId) {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         console.log(this.responseText);
+      }
+   };
+   xmlhttp.open("GET", "acceptFriendRequest.php?f="+friendId, true);
+   xmlhttp.send();
 
+}
+function denyFriendRequest(friendId) {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         console.log(this.responseText);
+      }
+   };
+   xmlhttp.open("GET", "denyFriendRequest.php?f="+friendId, true);
+   xmlhttp.send();
+
+}
 function funky (yes) {
    console.log(yes);
 }
 </script>
-
-
 
 
 
@@ -119,6 +129,72 @@ function funky (yes) {
 <!--loads the board first thing when page refreshes -->
 <body onload="loadEmIn()">
 
+<h1 style = "text-align: center">Notifications</h1>
+<table id="leaderboard" >
+   <!--“Uncaught SyntaxError: Unexpected end of input” with onclick CAUSED BY THE QUOTES BEING WRONG WATCH YO QUOTES-->
+   <?php
+      $requests= $link->query("SELECT * FROM `FriendRequests` WHERE `requestee` = '$currentUserName' ");//
+      $invitations = $link->query("SELECT * FROM `GameInvites` WHERE `invitee` = '$currentUserName' ");//
+      $playerId = 0;
+      $requester = "error";
+     
+      if ($requests->num_rows > 0) {
+         while ($row = $requests->fetch_assoc()) {
+            $requester = $row["requester"];
+            //grabs the requester's id
+            $playerInfo = $link->query("SELECT `id` FROM `Status` WHERE `player` = '$requester'");
+            if ($playerInfo->num_rows == 1) {
+               while($row = $playerInfo->fetch_assoc()) {
+                  $playerId = $row["id"];
+               }
+            }   
+            $accept = "acceptFriendRequest(". "$playerId" . ")";
+            $deny = "denyFriendRequest(". "$playerId" . ")";
+            echo "<tr>".  
+                     "<td>You Have a Friend Request from: ". $requester .  "</td>" . 
+                     "<td>". "<button onclick = \" " .$accept. "\">Accept</button> </td>" .
+                     "<td>". "<button onclick = \" " .$deny. "\">Deny</button> </td>" .
+                  "</tr>";  
+         } 
+      }else {
+         echo "<tr>".  
+                  "<td>No Friend Requests :(</td>" . 
+                  "<td></td>" . 
+                  "<td></td>" . 
+               "</tr>";  
+      }
+      
+      $inviter = "error";
+      if($invitations->num_rows > 0){
+         while ($row = $invitations->fetch_assoc() ) {
+            $inviter = $row["inviter"];
+            //grabs the inviter's id info 
+            $playerInfo = $link->query("SELECT `id` FROM `Status` WHERE `player` = '$inviter'");
+            if ($playerInfo->num_rows == 1) {
+               while($row = $playerInfo->fetch_assoc()) {
+                  $playerId = $row["id"];
+               }
+            }   
+            $funko = "funky(". "$playerId" . ")";
+            echo "<tr>".  
+                     "<td>You Have a Game Invite from: ". $inviter .  "</td>" . 
+                     "<td>". "<button onclick = \" " .$funko. "\">Accept</button> </td>" .
+                     "<td>". "<button onclick = \" " .$funko. "\">Deny</button> </td>" .
+                  "</tr>"; 
+         } 
+      }else {
+         echo "<tr>".  
+                  "<td>No Game Invites</td>" . 
+                  "<td></td>" . 
+                  "<td></td>" . 
+               "</tr>";  
+      }   
+            
+                  
+         
+      
+   ?>
+</table>
 
 
 <h1 style = "text-align: center">Friends</h1>
@@ -188,7 +264,7 @@ function funky (yes) {
             }elseif($friendshipCheck){
                echo  "<td>Friends</td>" ;
             }elseif($sentCheck){
-               echo  "<td>Request Pending</td>" ;
+               echo  "<td>Request Pending...</td>" ;
             }else{
                echo "<td>". "<button onclick = \" " .$funky. "\">add friend</button> </td>";
             }
@@ -270,49 +346,17 @@ function funky (yes) {
                echo "<br>You have an invitation from " . $row["invitee"].  "<br>";
             }          
          }
-         $link->close();
+      
 
       ?>
    </div>
 
 
-   <h3>Send Friend Request </h3>
-      <form action = "friendsAndInvites\friendRequest.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "user_name">
-         <input type = "submit" value="Send">
-      </form>
-      <!--<span class="help-block"><?php //echo $username_err; ?></span>-->
-   <h3>Invite Friend to Game</h3>
-      <form action = "friendsAndInvites\inviteFriend.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "user_name">
-         <input type = "submit" value="Invite">
-      </form>
-
-   <div>Respond to Friend Request
    
-      <form action = "friendsAndInvites\acceptFriendRequest.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "user_name">
-         <input type = "submit" value="Accept">
-      </form>
-      <form action = "friendsAndInvites\denyFriendRequest.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "user_name">
-         <input type = "submit" value="Deny">
-      </form>
-   </div>
-   <h3>Respond to Invite</h3>
-      <form action = "friendsAndInvites\acceptInviteFriend.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "user_name">
-         <input type = "submit" value="Accept">
-      </form>
-      <form action = "friendsAndInvites\denyInviteFriend.php" method= "post">
-         <b>Type their username:</b> <input type = "text" name = "user_name">
-         <input type = "submit" value="Deny">
-      </form>
-         
+
+   
 </p>
 
-<!-- 
-   UPDATE user SET wins = wins + 1 WHERE username = 'jackie'
-            -->
+
 </body>
 </html>

@@ -9,7 +9,7 @@
     $friendId = (int)($f);
     $currentUserName = $_SESSION["username"];
 
-
+    //gets the friends name using the id
     $friendo = "oh no";
     $friendInfoQ = $link->query("SELECT `player` FROM `Status` WHERE `id` = '$friendId'");
     if ($friendInfoQ->num_rows == 1) {
