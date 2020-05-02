@@ -211,11 +211,13 @@ function funky (yes) {
                   $playerId = $row["id"];
                }
             }   
+            //$accept = "acceptInvite(". "$playerId" . ")";//didnt write code 4 this yet
+            $deny = "denyInvite(". "$playerId" . ")";
             $funko = "funky(". "$playerId" . ")";
             echo "<tr>".  
                      "<td>You Have a Game Invite from: ". $inviter .  "</td>" . 
                      "<td>". "<button onclick = \" " .$funko. "\">Accept</button> </td>" .
-                     "<td>". "<button onclick = \" " .$funko. "\">Deny</button> </td>" .
+                     "<td>". "<button onclick = \" " .$deny. "\">Deny</button> </td>" .
                   "</tr>"; 
          } 
       }else {
@@ -249,15 +251,22 @@ function funky (yes) {
                while($row = $friendInfo->fetch_assoc()) {
                   $friendTimestamp = $row["timestamp"];
                   $friendId = $row["id"];
-                 
                }
             }
-            $funko = "funky(". "$friendId" . ")";
+            $sent = $link->query("SELECT * FROM `GameInvites` WHERE (`inviter` = '$currentUserName' AND  `invitee` = '$frienddd' )  
+                                                         OR (`inviter` = '$frienddd' AND  `invitee` = '$currentUserName' ) ");   
+            
+            $funko = "sendInvite(". "$friendId" . ")";
             echo "<tr>".  
                      "<td>". $frienddd.  "</td>" . 
-                     "<td>". checkIfOnline($friendTimestamp) .  "</td>" . 
-                     "<td>". "<button onclick = \" " .$funko. "\">Invite To Game</button> </td>" .
-                  "</tr>";        
+                     "<td>". checkIfOnline($friendTimestamp) .  "</td>";
+            if ($sent->num_rows == 0){
+               echo "<td>". "<button onclick = \" " .$funko. "\">Invite To Game</button> </td>";
+            } else{
+               echo "<td>Invitation Pending...</td>";
+            }
+                     
+            echo  "</tr>";        
          }
       }else {
          echo "<tr>".  
