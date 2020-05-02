@@ -60,7 +60,7 @@ function pingServer() {
 <body onload="loadEmIn()">
 
 
-<H1>Neck 4 - Local Multiplayer Mode</H1>
+<H1>Neck 4 - vs Easy CPU Mode</H1>
 
 
 
@@ -236,12 +236,12 @@ function selectColumn(col) {
       if(determineWin(board) == 1){
          document.getElementById("colorTurn").innerHTML="Yellow (YOU) Win!";
          win = true;
-         winHandler("1");//updates the database on the win
+         winHandler("1Easy CPU");//updates the database on the win
       //checks if player2/red won   
       }if(determineWin(board) == 2){
          document.getElementById("colorTurn").innerHTML="Red Wins!";
          win = true;
-         winHandler("2");
+         winHandler("2Easy CPU");
       }
       getPlayerInfo();
       saveBoard();
