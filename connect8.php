@@ -292,6 +292,14 @@ function saveBoard(){
 
       console.log("saved turn: "+JSON.stringify(turn));
       console.log(JSON.stringify(board));
+   }else if(win){
+      ford = [];
+      newBoard(ford);
+      localStorage.setItem('boardo'+chainSize,JSON.stringify(ford));
+      localStorage.setItem('turno'+chainSize,JSON.stringify(1));
+
+      console.log("saved turn: "+JSON.stringify(turn));
+      console.log(JSON.stringify(ford));
    }
 }
 
@@ -330,12 +338,12 @@ function selectColumn(col) {
       if(determineWin(board) == 1){
          document.getElementById("colorTurn").innerHTML="Yellow/You Win!";
          win = true;
-         winHandler("1");//updates the database on the win
+         winHandler("1Local Connect 8");//updates the database on the win
       //checks if player2/red won   
       }if(determineWin(board) == 2){
          document.getElementById("colorTurn").innerHTML="Red Wins!";
          win = true;
-         winHandler("2");
+         winHandler("2Local Connect 8");
       }
       getPlayerInfo();
       saveBoard();

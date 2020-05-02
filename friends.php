@@ -294,16 +294,10 @@ function funky (yes) {
   
          $sql = "SELECT * FROM `MatchHistory` WHERE `player1` = '$currentUserName' ";
          $result = $link->query($sql);
-         $outcome = "";
          if ($result->num_rows > 0) {
             // output data of each row
             while ($row = $result->fetch_assoc()) {
-               if ($row["win"]  == 1) {
-                  $outcome = "won.";
-               } else {
-                  $outcome = "lost.";
-               }
-               echo "<br>" . $row["player1"]. " played against ". $row["player2"].  " and ". $outcome.  "<br>";
+               echo "<br>" . $row["player1"]. " played against ". $row["player2"]. " " .  $row["gameMode"].   "wins:".$row["p1Wins"]."<br>";
             }  
          }
     
