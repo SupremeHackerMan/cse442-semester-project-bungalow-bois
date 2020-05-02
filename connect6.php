@@ -271,6 +271,12 @@ function selectColumn(col) {
          document.getElementById("colorTurn").innerHTML="Red Wins!";
          win = true;
          winHandler("2Local Connect 6");
+      //checks for ties ie the board is filled up and nobody wins
+      }else if(row == 0){
+         if(!board[row].includes(0)){//if no zeros on the top row then board is filled and no one won
+            document.getElementById("colorTurn").innerHTML="Nobody Wins, You're all losers.";
+            win = true;//setting to true will stop the game; 
+         }
       }
       getPlayerInfo();
       saveBoard();

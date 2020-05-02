@@ -203,8 +203,8 @@ function saveBoard(){
 function selectColumn(col) {
    if(!win){
       if (turn==1) {
-         var row = board.length - 1;
-         //columns 5 to 0 (default)
+         var row = board.length - 1;//start at the bottom row
+         //rows 5 to 0 (default)
          while (row > -1) { 
             if(board[row][col] != 0 ){//if the slot is taken then go up a row
                row--;
@@ -231,16 +231,23 @@ function selectColumn(col) {
          }
          nextTurn(1); 
       }
+      
       //checks if player1/yellow won
       if(determineWin(board) == 1){
          document.getElementById("colorTurn").innerHTML="Yellow (YOU) Win!";
          win = true;
          winHandler("1Local Connect 4");//updates the database on the win
       //checks if player2/red won   
-      }if(determineWin(board) == 2){
+      }else if(determineWin(board) == 2){
          document.getElementById("colorTurn").innerHTML="Red Wins!";
          win = true;
          winHandler("2Local Connect 4");
+      //checks for ties ie the board is filled up and nobody wins
+      }else if(row == 0){
+         if(!board[row].includes(0)){//if no zeros on the top row then board is filled and no one won
+            document.getElementById("colorTurn").innerHTML="Nobody Wins, You're all losers.";
+            win = true;//setting to true will stop the game; 
+         }
       }
       getPlayerInfo();
       saveBoard();

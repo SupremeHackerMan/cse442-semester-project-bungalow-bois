@@ -55,7 +55,7 @@
 
 function loadEmIn() {
    pingServer();
-   var interval = setInterval(function () { pingServer(); }, 15*1000);
+   var interval = setInterval(function () { pingServer(); }, 15*1000);//pings the server every 15 seconds
    getPlayerInfo();
 }
 //pings the server with current timestamp so we can check if a player is online or not
@@ -70,6 +70,7 @@ function pingServer() {
    xmlhttp.open("GET", "pingServer.php", true);
    xmlhttp.send();
 }
+//---------------------------FRIENDSHIP----------------------------
 function sendFriendRequest(friendId) {
    var xmlhttp = new XMLHttpRequest();
    xmlhttp.onreadystatechange = function() {
@@ -101,6 +102,41 @@ function denyFriendRequest(friendId) {
       }
    };
    xmlhttp.open("GET", "denyFriendRequest.php?f="+friendId, true);
+   xmlhttp.send();
+
+}
+//---------------------------INVITATIONS----------------------------
+function sendInvite(friendId) {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         console.log(this.responseText);
+         
+      }
+   };
+   xmlhttp.open("GET", "sendInvite.php?f="+friendId, true);
+   xmlhttp.send();
+
+}
+function acceptInvite(friendId) {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         console.log(this.responseText);
+      }
+   };
+   xmlhttp.open("GET", "acceptInvite.php?f="+friendId, true);
+   xmlhttp.send();
+
+}
+function denyInvite(friendId) {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         console.log(this.responseText);
+      }
+   };
+   xmlhttp.open("GET", "denyInvite.php?f="+friendId, true);
    xmlhttp.send();
 
 }
