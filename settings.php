@@ -22,7 +22,19 @@
 <script>
 function loadEmIn(){
    getPlayerInfo();
-  
+   pingServer();
+   var interval = setInterval(function () { pingServer(); }, 15*1000);
+}
+function pingServer() {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         console.log(this.responseText);
+         
+      }
+   };
+   xmlhttp.open("GET", "pingServer.php", true);
+   xmlhttp.send();
 }
 </script>
 <head>
@@ -52,9 +64,12 @@ function loadEmIn(){
          <a href = "connect8.php">Connect 8</a><br/><br/>
       
          vs CPU<br/>
+
          <a href = "playvsbotEasy.php">Easy</a><br/>
          <a href = "playvsbotMedium.php">Medium</a><br/>
          <a href = "playvsbotHard.php">Hard</a><br/><br/>
+
+
    
          Multiplayer<br/>
          <a href = "createOnlineGame.php">Play</a>

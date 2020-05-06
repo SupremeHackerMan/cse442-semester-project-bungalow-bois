@@ -11,7 +11,7 @@ function getPlayerInfo() {
           
        }
     };
-    xmlhttp.open("GET", "getPlayerInfo.php", true);
+    xmlhttp.open("GET", "../getPlayerInfo.php", true);
     xmlhttp.send();
  
 }
@@ -34,7 +34,7 @@ function getRankings() {
          }
       }
    };
-   xmlhttp.open("GET", "getRankings.php", true);
+   xmlhttp.open("GET", "../getRankings.php", true);
    xmlhttp.send();
 
 }
@@ -47,7 +47,7 @@ function winHandler(winningplayer) {
          
       }
    };
-   xmlhttp.open("GET", "winHandler.php?d="+winningplayer, true);
+   xmlhttp.open("GET", "../winHandler.php?d="+winningplayer, true);
    xmlhttp.send();
 
 }

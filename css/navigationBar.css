@@ -41,13 +41,13 @@ font-family: "Helvetica", sans-serif;
 background-color: #ddd;
 color: black;
 }
-/*the one currently selected*/
+/*the tab currently selected*/
 .topnav a.active {
 background-color: #0077EE;
 color: white;
 }
 
-/*greys out the text*/
+/*greys out the text: this is for the login screen since you cant acess any of the tabs yet*/
 .topnav div.inactive {
 float: right;
 color: #f2f2f2;
@@ -58,7 +58,7 @@ font-size: 17px;
 opacity: .15;
 }
 
-
+/*settings box stuff*/
 .settingsMenu{
   text-align: center;
   font-family: "Helvetica", sans-serif;

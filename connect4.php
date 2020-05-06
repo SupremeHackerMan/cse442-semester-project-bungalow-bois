@@ -26,6 +26,19 @@
 function loadEmIn(){
    loadBoard();//loads board data that was saved in local storage
    getPlayerInfo();//retrives current players rankings and displays it top left
+   pingServer();
+   var interval = setInterval(function () { pingServer(); }, 15*1000);
+}
+function pingServer() {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         console.log(this.responseText);
+         
+      }
+   };
+   xmlhttp.open("GET", "pingServer.php", true);
+   xmlhttp.send();
 }
 </script>
 
@@ -174,6 +187,14 @@ function saveBoard(){
 
       console.log("saved turn: "+JSON.stringify(turn));
       console.log(JSON.stringify(board));
+   }else if(win){
+      ford = [];
+      newBoard(ford);
+      localStorage.setItem('boardo'+chainSize,JSON.stringify(ford));
+      localStorage.setItem('turno'+chainSize,JSON.stringify(1));
+
+      console.log("saved turn: "+JSON.stringify(turn));
+      console.log(JSON.stringify(ford));
    }
 }
 
@@ -182,8 +203,8 @@ function saveBoard(){
 function selectColumn(col) {
    if(!win){
       if (turn==1) {
-         var row = board.length - 1;
-         //columns 5 to 0 (default)
+         var row = board.length - 1;//start at the bottom row
+         //rows 5 to 0 (default)
          while (row > -1) { 
             if(board[row][col] != 0 ){//if the slot is taken then go up a row
                row--;
@@ -210,16 +231,23 @@ function selectColumn(col) {
          }
          nextTurn(1); 
       }
+      
       //checks if player1/yellow won
       if(determineWin(board) == 1){
          document.getElementById("colorTurn").innerHTML="Yellow (YOU) Win!";
          win = true;
-         winHandler("1");//updates the database on the win
+         winHandler("1Local Connect 4");//updates the database on the win
       //checks if player2/red won   
-      }if(determineWin(board) == 2){
+      }else if(determineWin(board) == 2){
          document.getElementById("colorTurn").innerHTML="Red Wins!";
          win = true;
-         winHandler("2");
+         winHandler("2Local Connect 4");
+      //checks for ties ie the board is filled up and nobody wins
+      }else if(row == 0){
+         if(!board[row].includes(0)){//if no zeros on the top row then board is filled and no one won
+            document.getElementById("colorTurn").innerHTML="Nobody Wins, You're all losers.";
+            win = true;//setting to true will stop the game; 
+         }
       }
       getPlayerInfo();
       saveBoard();
@@ -353,7 +381,7 @@ function nextTurn(pturn) {
 }
 
 
-//resets the board
+//resets the board and the display
 function clearBoard() {
    //all values back to 0
    for(x = 0; x < ROWS; x++){
@@ -364,8 +392,8 @@ function clearBoard() {
    nextTurn(1);//sets the turn back to player 1
    saveBoard();
    updateBoard();
-
 }
+
 
 
 </script>

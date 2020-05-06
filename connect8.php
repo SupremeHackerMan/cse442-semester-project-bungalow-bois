@@ -24,6 +24,18 @@
 function loadEmIn(){
    loadBoard();//loads board data that was saved in local storage
    getPlayerInfo();//retrives current players rankings and displays it top left
+   var interval = setInterval(function () { pingServer(); }, 15*1000);
+}
+function pingServer() {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+         console.log(this.responseText);
+         
+      }
+   };
+   xmlhttp.open("GET", "pingServer.php", true);
+   xmlhttp.send();
 }
 </script>
 
@@ -280,6 +292,14 @@ function saveBoard(){
 
       console.log("saved turn: "+JSON.stringify(turn));
       console.log(JSON.stringify(board));
+   }else if(win){
+      ford = [];
+      newBoard(ford);
+      localStorage.setItem('boardo'+chainSize,JSON.stringify(ford));
+      localStorage.setItem('turno'+chainSize,JSON.stringify(1));
+
+      console.log("saved turn: "+JSON.stringify(turn));
+      console.log(JSON.stringify(ford));
    }
 }
 
@@ -318,12 +338,18 @@ function selectColumn(col) {
       if(determineWin(board) == 1){
          document.getElementById("colorTurn").innerHTML="Yellow/You Win!";
          win = true;
-         winHandler("1");//updates the database on the win
+         winHandler("1Local Connect 8");//updates the database on the win
       //checks if player2/red won   
       }if(determineWin(board) == 2){
          document.getElementById("colorTurn").innerHTML="Red Wins!";
          win = true;
-         winHandler("2");
+         winHandler("2Local Connect 8");
+      //checks for ties ie the board is filled up and nobody wins
+      }else if(row == 0){
+         if(!board[row].includes(0)){//if no zeros on the top row then board is filled and no one won
+            document.getElementById("colorTurn").innerHTML="Nobody Wins, You're all losers.";
+            win = true;//setting to true will stop the game; 
+         }
       }
       getPlayerInfo();
       saveBoard();
