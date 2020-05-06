@@ -1,0 +1,81 @@
+/*padding is the area around the text its very useful for setting colored backgrounds*/
+.playInfo{
+float: left;
+color: #f2f2f2;
+text-align: center;
+padding: 14px 16px;
+text-decoration: none;
+font-size: 17px;
+font-family: "Helvetica", sans-serif;
+}
+
+
+.bigTitle {
+text-align: center;
+font-family: "Helvetica", sans-serif;
+font-size: 90px;
+}
+
+h1{
+text-align: center;
+font-family: "Helvetica", sans-serif;
+}
+
+/*black bar*/
+.topnav {
+overflow: hidden;
+background-color: #333;
+}
+
+.topnav a {
+float: right;
+color: #f2f2f2;
+text-align: center;
+padding: 14px 16px;
+text-decoration: none;
+font-size: 17px;
+font-family: "Helvetica", sans-serif;
+}
+
+.topnav a:hover {
+background-color: #ddd;
+color: black;
+}
+/*the tab currently selected*/
+.topnav a.active {
+background-color: #0077EE;
+color: white;
+}
+
+/*greys out the text: this is for the login screen since you cant acess any of the tabs yet*/
+.topnav div.inactive {
+float: right;
+color: #f2f2f2;
+text-align: center;
+padding: 14px 16px;
+text-decoration: none;
+font-size: 17px;
+opacity: .15;
+}
+
+/*settings box stuff*/
+.settingsMenu{
+  text-align: center;
+  font-family: "Helvetica", sans-serif;
+  padding: 10px 14px;
+  background-color: #f2f2f2;
+  width: 400px;
+  padding: 10px;
+  margin: 0 auto;
+}
+.settingsMenu a{
+  color: #545454;
+  text-align: center;
+  font-family: "Helvetica", sans-serif;
+  text-decoration: none;
+  padding: 4px 7px;
+}
+.settingsMenu a:hover {
+background-color: #0077EE;
+color: white;
+}

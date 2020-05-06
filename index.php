@@ -4,7 +4,7 @@ session_start();
  
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-    header("location: welcome.php");
+    header("location: home.php");
     exit;
 }
  
@@ -63,8 +63,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             $_SESSION["id"] = $id;
                             $_SESSION["username"] = $username;                            
                             
-                            // Redirect user to welcome page
-                            header("location: welcome.php");
+                            // Redirect user to home page
+                            header("location: home.php");
                         } else{
                             // Display an error message if password is not valid
                             $password_err = "The password you entered was not valid.";
@@ -94,13 +94,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="css/navigationBar.css"><!--navigation bar styling-->
     <style type="text/css">
         body{ font: 14px sans-serif; }
-        .wrapper{ width: 350px; padding: 20px; }
+        .wrapper{ width: 350px; padding: 20px;margin: 0 auto; }
     </style>
+    <!--Navigation bar-->
+    <div class="topnav">
+        <a class="active" href="#login">Log In</a>
+        <div class="inactive" >Settings</div>
+        <div class="inactive" >Play Game</div>
+        <div class="inactive" >Friends</div>
+        <div class="inactive" >Profile</div>
+        <div class="inactive" >Home</div>
+    </div>
 </head>
 <body>
+    
+    <div class = "bigTitle" >Connect 4</div>
     <div class="wrapper">
+        
         <h2>Login</h2>
         <p>Please fill in your credentials to login.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
